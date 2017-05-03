@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class PocketsphinxTrigger(BaseTrigger):
 
+
 	type = triggers.TYPES.VOICE
 
 	def __init__(self, config, trigger_callback):
@@ -28,12 +29,17 @@ class PocketsphinxTrigger(BaseTrigger):
 		ps_config = Decoder.default_config()
 
 		# Set recognition model to US
-		ps_config.set_string('-hmm', os.path.join(get_model_path(), 'en-us'))
-		ps_config.set_string('-dict', os.path.join(get_model_path(), 'cmudict-en-us.dict'))
+		ps_config.set_string('-hmm', os.path.join(get_model_path(), self._tconfig['language']))
+		ps_config.set_string('-dict', os.path.join(get_model_path(), self._tconfig['dictionary']))
 
 		# Specify recognition key phrase
-		ps_config.set_string('-keyphrase', self._tconfig['phrase'])
-		ps_config.set_float('-kws_threshold', float(self._tconfig['threshold']))
+		#ps_config.set_string('-keyphrase', self._tconfig['phrase'])
+		#ps_config.set_float('-kws_threshold', float(self._tconfig['threshold']))
+
+		### Multiple Hotwords
+		#ps_config.set_string('-inmic', 'yes')
+		ps_config.set_string('-kws', '../../keyphrase.list')
+
 
 		# Hide the VERY verbose logging information when not in debug
 		if logging.getLogger('alexapi').getEffectiveLevel() != logging.DEBUG:
@@ -61,6 +67,8 @@ class PocketsphinxTrigger(BaseTrigger):
 			self._decoder.start_utt()
 
 			triggered = False
+			assistantTriggered = False
+
 			while not triggered:
 
 				if not self._enabled_lock.isSet():
@@ -73,6 +81,15 @@ class PocketsphinxTrigger(BaseTrigger):
 				self._decoder.process_raw(buf, False, False)
 
 				triggered = self._decoder.hyp() is not None
+				
+				### Assistant Starts Here
+
+				if triggered:
+					voiceCommand = self._decoder.hyp()
+					print(voiceCommand)
+					if voiceCommand == self._tconfig['phraseAssistant']:
+						print("Assistant call detected")
+						assistantTriggered == True
 
 			# To avoid overflows close the microphone connection
 			inp.close()
@@ -82,7 +99,7 @@ class PocketsphinxTrigger(BaseTrigger):
 			self._disabled_sync_lock.set()
 
 			if triggered:
-				self._trigger_callback(self)
+				self._trigger_callback(self, assistantTriggered)
 
 	def enable(self):
 		self._enabled_lock.set()

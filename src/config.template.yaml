@@ -49,7 +49,7 @@ alexa:
 # See https://github.com/alexa-pi/AlexaPi/wiki/Triggers for the description of these options
 triggers:
   platform:
-    enabled: true
+    enabled: false
     voice_confirm: false
 
     # one of: oneshot-vad, continuous, continuous-vad
@@ -76,7 +76,10 @@ triggers:
     voice_confirm: true
 
     phrase: "alexa"
+    phraseAssistant: "google"
     threshold: 1e-10
+    language: "en-us"
+    dictionary: "cmudict-en-us.dict"
 
 # Commands to run before and after an interaction begins. Leave empty to disable.
 event_commands:
@@ -100,9 +103,12 @@ event_commands:
   # Command to run during a clean shutdown of AlexaPi
   shutdown: ""
 
+  # Run Google Assistant SDK
+  assistant: "source env/bin/activate; yes ' ' | python -m googlesamples.assistant"
+
 platform:
   # Name of your platform, e.g. raspberrypi, orangepi, desktop
-  device: "dummy"
+  device: "assistantPi"
 
 platforms:
   # common config for all platforms (if they support the options)

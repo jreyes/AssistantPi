@@ -99,6 +99,7 @@ event_commands = {
 	'pre_interaction': "",
 	'post_interaction': "",
 	'shutdown': "",
+	'assistant': "",
 }
 
 if 'event_commands' in config:
@@ -503,17 +504,17 @@ def process_response(response):
 		platform.indicate_failure()
 
 trigger_thread = None
-def trigger_callback(trigger):
+def trigger_callback(trigger, isAssistant):
 	global trigger_thread
 
 	triggers.disable()
 
-	trigger_thread = threading.Thread(target=trigger_process, args=(trigger,))
+	trigger_thread = threading.Thread(target=trigger_process, args=(trigger, isAssistant,))
 	trigger_thread.setDaemon(True)
 	trigger_thread.start()
 
 
-def trigger_process(trigger):
+def trigger_process(trigger, isAssistant):
 
 	if player.is_playing():
 		player.stop()
@@ -538,8 +539,13 @@ def trigger_process(trigger):
 	if trigger.voice_confirm:
 		player.play_speech(resources_path + 'alexayes.mp3')
 
-	audio_stream = capture.silence_listener(force_record=force_record)
-	alexa_speech_recognizer(audio_stream)
+	### Assistant Override
+	if isAssistant:
+		### Start Google Assistant SDK
+		subprocess.Popen(event_commands['assistant'], shell=True, stdout=subprocess.PIPE)
+	else:
+		audio_stream = capture.silence_listener(force_record=force_record)
+		alexa_speech_recognizer(audio_stream)
 
 	triggers.enable()
 

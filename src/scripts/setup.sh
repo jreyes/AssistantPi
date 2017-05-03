@@ -49,36 +49,36 @@ cd "${SCRIPT_DIRECTORY}"
 OS_default="debian"
 DEVICE_default="raspberrypi"
 
-echo "Which operating system are you using?"
-printf "%15s - %s\n" "debian" "Debian, Raspbian, Armbian, Ubuntu or other Debian-based"
-printf "%15s - %s\n" "archlinux" "Arch Linux or Arch Linux-based"
-read -r -p "Your OS [${OS_default}]: " OS
+# echo "Which operating system are you using?"
+# printf "%15s - %s\n" "debian" "Debian, Raspbian, Armbian, Ubuntu or other Debian-based"
+# printf "%15s - %s\n" "archlinux" "Arch Linux or Arch Linux-based"
+# read -r -p "Your OS [${OS_default}]: " OS
 
-if [ "${OS}" == "" ]; then
-    OS=${OS_default}
-elif [ ! -f "./inc/os/${OS}.sh" ]; then
-    echo "Incorrect value. Exiting."
-    exit
-fi
+# if [ "${OS}" == "" ]; then
+     OS=${OS_default}
+# elif [ ! -f "./inc/os/${OS}.sh" ]; then
+#     echo "Incorrect value. Exiting."
+#     exit
+# fi
 
-echo "Which device are you using?"
-cd inc/device
-for deviceFile in *.sh; do
-    deviceName="${deviceFile/.sh/}"
-    deviceDescription=$(grep -P -o -e "(?<=DESCRIPTION=\")(.*)(?=\")" "${deviceFile}")
+# echo "Which device are you using?"
+# cd inc/device
+# for deviceFile in *.sh; do
+#     deviceName="${deviceFile/.sh/}"
+#     deviceDescription=$(grep -P -o -e "(?<=DESCRIPTION=\")(.*)(?=\")" "${deviceFile}")
 
-    printf "%15s - %s\n" "${deviceName}" "${deviceDescription}"
-done
-cd "${SCRIPT_DIRECTORY}"
+#     printf "%15s - %s\n" "${deviceName}" "${deviceDescription}"
+# done
+# cd "${SCRIPT_DIRECTORY}"
 
-read -r -p "Your device [${DEVICE_default}]: " DEVICE
+# read -r -p "Your device [${DEVICE_default}]: " DEVICE
 
-if [ "${DEVICE}" == "" ]; then
-    DEVICE=${DEVICE_default}
-elif [ ! -f "./inc/device/${DEVICE}.sh" ]; then
-    echo "Incorrect value. Exiting."
-    exit
-fi
+# if [ "${DEVICE}" == "" ]; then
+     DEVICE=${DEVICE_default}
+# elif [ ! -f "./inc/device/${DEVICE}.sh" ]; then
+#     echo "Incorrect value. Exiting."
+#     exit
+# fi
 
 source ./inc/common.sh
 
@@ -147,6 +147,42 @@ case $shairport in
                 systemctl enable shairport-sync
         ;;
 esac
+
+
+### Assistant
+read -r -p "Would you like to also install Google Assistant (Y/n)? " assistant
+case $assistant in
+        [yY] )
+                echo "-- installing Assistant - this might take a while, go grab a coffee and check back in 15min --"
+                echo "-- in the meantime, go visit "
+                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
+                echo "-- Get your OAuth Credentials-JSON file ready --"
+                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
+                echo ""
+
+                install_assistant
+
+                echo "-- Go visit "
+                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
+                echo "-- Get your OAuth Credentials-JSON file ready --"
+                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
+                echo ""
+                read -r -p "Are you ready? If the file's not there or you don't finish the process, you have to do it manually afterwards (Y/n)? " configReady
+                    case $configReady in
+                        [yY] )
+                        auth_assistant
+                        ;;
+                        [nN] ) ;;
+                    esac
+                echo ""
+                echo "-- You can do this manually, if Authentification with Google API fails. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
+                echo "source env/bin/activate; python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
+                echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
+
+        ;;
+        [nN] ) ;;
+esac
+
 
 cd "${ALEXASRC_DIRECTORY}"
 echo ""
