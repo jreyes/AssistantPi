@@ -38,7 +38,7 @@ class PocketsphinxTrigger(BaseTrigger):
 
 		### Multiple Hotwords
 		#ps_config.set_string('-inmic', 'yes')
-		ps_config.set_string('-kws', '../../keyphrase.list')
+		ps_config.set_string('-kws', '/opt/AlexaPi/src/keyphrase.list')
 
 
 		# Hide the VERY verbose logging information when not in debug
@@ -67,7 +67,8 @@ class PocketsphinxTrigger(BaseTrigger):
 			self._decoder.start_utt()
 
 			triggered = False
-			assistantTriggered = False
+			#assistantTriggered = False
+			voice_command = ""
 
 			while not triggered:
 
@@ -81,15 +82,6 @@ class PocketsphinxTrigger(BaseTrigger):
 				self._decoder.process_raw(buf, False, False)
 
 				triggered = self._decoder.hyp() is not None
-				
-				### Assistant Starts Here
-
-				if triggered:
-					voiceCommand = self._decoder.hyp()
-					print(voiceCommand)
-					if voiceCommand == self._tconfig['phraseAssistant']:
-						print("Assistant call detected")
-						assistantTriggered == True
 
 			# To avoid overflows close the microphone connection
 			inp.close()
@@ -99,7 +91,10 @@ class PocketsphinxTrigger(BaseTrigger):
 			self._disabled_sync_lock.set()
 
 			if triggered:
-				self._trigger_callback(self, assistantTriggered)
+				### Assistant Starts Here
+				voice_command = self._decoder.hyp().hypstr
+				self._trigger_callback(self, voice_command)
+				###
 
 	def enable(self):
 		self._enabled_lock.set()

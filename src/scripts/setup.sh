@@ -29,7 +29,11 @@ if [ "$ALEXASRC_DIRECTORY" != "$ALEXASRC_DIRECTORY_CORRECT" ]; then
     echo "You haven't downloaded AlexaPi into /opt. As a result of that, you won't be able to run AlexaPi on boot."
     echo "If you wish to be able to run AlexaPi on boot, please interrupt this script and download into /opt."
     echo ""
-    echo "Note: If you're an advanced user, you can install the init script manually and edit it to reflect your install path, but we don't provide any guarantees."
+    echo ""
+    echo "######################################################################################################"
+    echo "For AssistantPi, this MUST to be located in /opt/AlexaPi, otherwise it won't work"
+    echo "######################################################################################################"
+
     read -r -p "Interrupt? (Y/n)? " interrupt_script
 
     case ${interrupt_script} in
@@ -239,6 +243,7 @@ case $assistant in
                 echo ""
 
                 install_assistant
+                cp /opt/AlexaPi/src/assistant.example.asoundrc /home/pi/.asoundrc
 
                 echo ""
                 echo "######################################################################################################"

@@ -76,7 +76,7 @@ triggers:
     voice_confirm: true
 
     phrase: "alexa"
-    phraseAssistant: "google"
+    phrase_assistant: "google"
     threshold: 1e-10
     language: "en-us"
     dictionary: "cmudict-en-us.dict"
@@ -103,12 +103,9 @@ event_commands:
   # Command to run during a clean shutdown of AlexaPi
   shutdown: ""
 
-  # Run Google Assistant SDK
-  assistant: "source /home/pi/env/bin/activate; yes ' ' | python -m googlesamples.assistant"
-
 platform:
   # Name of your platform, e.g. raspberrypi, orangepi, desktop
-  device: "assistantPi"
+  device: "AssistantPi"
 
 platforms:
   # common config for all platforms (if they support the options)
