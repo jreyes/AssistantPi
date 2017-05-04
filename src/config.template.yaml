@@ -13,7 +13,7 @@ sound:
   # This is an override that is normally not needed and is a last resort.
   allow_unlisted_input_device: false
 
-  playback_handler: "vlc"
+  playback_handler: "sox"
 
   # you can go here with alsa, pulse or others
   # keep blank for the best audio output selected by the underlying code
@@ -104,7 +104,7 @@ event_commands:
   shutdown: ""
 
   # Run Google Assistant SDK
-  assistant: "source env/bin/activate; yes ' ' | python -m googlesamples.assistant"
+  assistant: "source /home/pi/env/bin/activate; yes ' ' | python -m googlesamples.assistant"
 
 platform:
   # Name of your platform, e.g. raspberrypi, orangepi, desktop

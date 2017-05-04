@@ -49,6 +49,8 @@ cd "${SCRIPT_DIRECTORY}"
 OS_default="debian"
 DEVICE_default="raspberrypi"
 
+echo "Currently, AssistantPi only supports Raspberry Pi on Debian, Raspbian, Ubuntu or other Debian-based."
+
 # echo "Which operating system are you using?"
 # printf "%15s - %s\n" "debian" "Debian, Raspbian, Armbian, Ubuntu or other Debian-based"
 # printf "%15s - %s\n" "archlinux" "Arch Linux or Arch Linux-based"
@@ -148,42 +150,6 @@ case $shairport in
         ;;
 esac
 
-
-### Assistant
-read -r -p "Would you like to also install Google Assistant (Y/n)? " assistant
-case $assistant in
-        [yY] )
-                echo "-- installing Assistant - this might take a while, go grab a coffee and check back in 15min --"
-                echo "-- in the meantime, go visit "
-                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
-                echo "-- Get your OAuth Credentials-JSON file ready --"
-                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
-                echo ""
-
-                install_assistant
-
-                echo "-- Go visit "
-                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
-                echo "-- Get your OAuth Credentials-JSON file ready --"
-                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
-                echo ""
-                read -r -p "Are you ready? If the file's not there or you don't finish the process, you have to do it manually afterwards (Y/n)? " configReady
-                    case $configReady in
-                        [yY] )
-                        auth_assistant
-                        ;;
-                        [nN] ) ;;
-                    esac
-                echo ""
-                echo "-- You can do this manually, if Authentification with Google API fails. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
-                echo "source env/bin/activate; python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
-                echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
-
-        ;;
-        [nN] ) ;;
-esac
-
-
 cd "${ALEXASRC_DIRECTORY}"
 echo ""
 
@@ -251,10 +217,73 @@ config_set 'Client_Secret' "${Client_Secret}"
 
 run_python ./auth_web.py
 
+
+### Assistant
+echo ""
+echo ""
+echo ""
+echo "-- AlexaPi Setup complete. --"
+echo ""
+echo ""
+read -r -p "Now to what we're here for: Install Google Assistant (y/n)? " assistant
+case $assistant in
+        [yY] )
+                echo ""
+                echo "######################################################################################################"
+                echo "-- installing Assistant - this might take a while, go grab a coffee and check back in 10min --"
+                echo "-- in the meantime, go visit "
+                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
+                echo "-- Get your OAuth Credentials-JSON file ready --"
+                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
+                echo "######################################################################################################"
+                echo ""
+
+                install_assistant
+
+                echo ""
+                echo "######################################################################################################"
+                echo "-- Go visit "
+                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
+                echo "-- Get your OAuth Credentials-JSON file ready --"
+                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
+                echo "######################################################################################################"
+                echo ""
+                read -r -p "Are you ready? If the file's not there or you don't finish the process, you have to do it manually afterwards (Y/n) " configReady
+                    case $configReady in
+                        [yY] )
+                            auth_assistant
+                        ;;
+                        ) ;;
+                    esac
+                echo ""
+                echo "######################################################################################################"
+                echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
+                echo "source /home/pi/env/bin/activate; python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json; deactivate"
+                echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
+                echo "######################################################################################################"
+                echo ""
+        ;;
+        ) ;;
+esac
+###
+
 echo ""
 echo "######################################################################################################"
-echo "IMPORTANT NOTICE:"
+echo "IMPORTANT NOTICE REGARDING AUDIO:"
 echo "If you use a desktop OS, you HAVE TO set up your system audio so services like AlexaPi can use it too."
 echo "See https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging#pulseaudio"
 echo "######################################################################################################"
 echo ""
+
+
+### Start AlexaPi service after install
+echo ""
+echo ""
+echo "Starting service..."
+systemctl start AlexaPi.service
+echo ""
+echo "Checking service..."
+sleep 1
+systemctl status AlexaPi.service
+echo ""
+echo "AssistantPi Installer finished"

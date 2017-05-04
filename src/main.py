@@ -26,6 +26,8 @@ import alexapi.triggers as triggers
 from alexapi.exceptions import ConfigurationException
 from alexapi.constants import RequestType, PlayerActivity
 
+import assistantpi.googlesamples.assistant.__main__ as assistant
+
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
 coloredlogs.DEFAULT_FIELD_STYLES = {
 	'hostname': {'color': 'magenta'},
@@ -309,7 +311,7 @@ def alexa_speech_recognizer_generate_data(audio, boundary):
 		},
 		"messageBody": {
 			"profile": "alexa-close-talk",
-			"locale": "en-us",
+			"locale": config['triggers']['pocketsphinx']['language'],
 			"format": "audio/L16; rate=16000; channels=1"
 		}
 	}
@@ -351,6 +353,10 @@ def alexa_speech_recognizer(audio_stream):
 
 	process_response(resp)
 
+def google_handler():
+	#subprocess.Popen(event_commands['assistant'], shell=True, stdout=subprocess.PIPE)
+
+	assistant.main()
 
 def alexa_getnextitem(navigationToken):
 	# https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/rest/audioplayer-getnextitem-request
@@ -541,8 +547,8 @@ def trigger_process(trigger, isAssistant):
 
 	### Assistant Override
 	if isAssistant:
-		### Start Google Assistant SDK
-		subprocess.Popen(event_commands['assistant'], shell=True, stdout=subprocess.PIPE)
+		# Start Google Assistant SDK
+		google_handler()
 	else:
 		audio_stream = capture.silence_listener(force_record=force_record)
 		alexa_speech_recognizer(audio_stream)
