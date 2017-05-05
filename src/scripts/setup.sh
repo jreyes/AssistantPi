@@ -131,7 +131,7 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
 fi
 
 read -r -p "Would you like to also install Airplay support (Y/n)? " shairport
-read -r -p "Install Google Assistant (y/n)? " assistant
+read -r -p "Install Google Assistant (Y/n)? " assistant
 
 install_os
 
@@ -154,6 +154,25 @@ case $shairport in
                 systemctl enable shairport-sync
         ;;
 esac
+
+### Assistant
+case $assistant in
+        [nN] ) ;;
+        *)
+            echo ""
+            echo "######################################################################################################"
+            echo "-- installing Assistant - this might take a while, go grab a coffee and check back in 10-15min --"
+            echo "-- in the meantime, go visit "
+            echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
+            echo "-- Get your OAuth Credentials-JSON file ready --"
+            echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
+            echo "######################################################################################################"
+            echo ""
+
+            install_assistant
+        ;;
+esac
+###
 
 cd "${ALEXASRC_DIRECTORY}"
 echo ""
@@ -222,59 +241,34 @@ config_set 'Client_Secret' "${Client_Secret}"
 
 run_python ./auth_web.py
 
-
 ### Assistant
 echo ""
+echo "######################################################################################################"
+echo "-- Let's authenticate with Google Assistant API. Go visit and follow"
+echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
+echo "-- Get your OAuth Credentials-JSON file ready --"
+echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
 echo ""
+echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
+echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
+echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
+echo "######################################################################################################"
 echo ""
-echo "-- AlexaPi Setup complete. --"
-echo ""
-echo ""
-
-case $assistant in
-        [yY] )
-                echo ""
-                echo "######################################################################################################"
-                echo "-- installing Assistant - this might take a while, go grab a coffee and check back in 10min --"
-                echo "-- in the meantime, go visit "
-                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
-                echo "-- Get your OAuth Credentials-JSON file ready --"
-                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
-                echo "######################################################################################################"
-                echo ""
-
-                install_assistant
-                cp /opt/AlexaPi/src/assistant.example.asoundrc /home/pi/.asoundrc
-
-                echo ""
-                echo "######################################################################################################"
-                echo "-- Go visit "
-                echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
-                echo "-- Get your OAuth Credentials-JSON file ready --"
-                echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
-                echo ""
-                echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
-                echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
-                echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
-                echo "######################################################################################################"
-                echo ""
-                read -r -p "Are you ready? If the file's not there or you don't finish the process, you have to do it manually afterwards (Y/n) " configReady
-                    case $configReady in
-                        [yY] )
-                            auth_assistant
-                        ;;
-                        *) ;;
-                    esac
-                echo ""
-                echo "######################################################################################################"
-                echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
-                echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
-                echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
-                echo "######################################################################################################"
-                echo ""
+read -r -p "Are you ready? If the file's not there or you don't finish the process, you have to do it manually afterwards (Y/n) " config_ready
+    case $config_ready in
+        [Nn] ) ;;
+        *)
+            auth_assistant
         ;;
-        *) ;;
-esac
+        
+    esac
+echo ""
+echo "######################################################################################################"
+echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
+echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
+echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
+echo "######################################################################################################"
+echo ""
 ###
 
 echo ""

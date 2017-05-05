@@ -36,6 +36,9 @@ function install_assistant {
 	/opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
 
 	/opt/AlexaPi/env/bin/pip install tenacity
+
+	# Put default Sound config in place
+	cp /opt/AlexaPi/src/assistant.example.asoundrc /home/pi/.asoundrc
 }
 
 function auth_assistant {
