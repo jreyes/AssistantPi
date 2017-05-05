@@ -8,7 +8,10 @@ https://github.com/alexa-pi/AlexaPi
 
 
 #Kill Running script
-	kill $(ps aux | grep '[p]ython csp_build.py' | awk '{print $2}')
+	#kill $(ps aux | grep '[p]ython csp_build.py' | awk '{print $2}')
 
 #Sound:
 	set to desired value using sudo raspi-config > Advanced Options > Audio
+
+#Install Tenacity again in env
+	(env) pip install tenacity

@@ -331,6 +331,35 @@ def alexa_speech_recognizer_generate_data(audio, boundary):
 
     platform.indicate_processing()
 
+### Assistant
+def assistant_handler(voice_command):
+    # clean voice_command
+    voice_command = voice_command.replace(" ", "")
+    logger.debug("Pocketsphinx Trigger found voice command: **" + voice_command + "**")
+    
+    # compare to phrase_assistant from config
+    voice_command_assistant = config['triggers']['pocketsphinx']['phrase_assistant']
+    logger.debug("Compare to Assistant Command from Config: **" + voice_command_assistant + "**")
+    
+    if voice_command == voice_command_assistant:
+
+        # Start Assistant
+        logger.debug("Assistant triggered, starting...")
+        
+        cmd = "sudo -u pi sh -c 'cd /opt/AlexaPi; /home/pi/env/bin/python -m assistant'"
+        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+
+        # Get exit signal
+        out = process.stdout.readline()
+        out = b''.join(out).decode("utf-8")
+        if 'exit' in out:
+            logger.debug("assistant_handler: conversation complete, moving on")
+            process.kill()
+
+        return True
+    else:
+        return False
+###
 
 def alexa_speech_recognizer(audio_stream):
     # https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/rest/speechrecognizer-requests
@@ -538,7 +567,7 @@ def trigger_process(trigger, voice_command):
         player.play_speech(resources_path + 'alexayes.mp3')
 
     ### Assistant Override
-    if not google_handler(voice_command):
+    if not assistant_handler(voice_command):
         audio_stream = capture.silence_listener(force_record=force_record)
         alexa_speech_recognizer(audio_stream)
     ###
@@ -607,33 +636,3 @@ if __name__ == "__main__":
 
     while True:
         time.sleep(1)
-
-
-def google_handler(voice_command):
-    logger.debug("Pocketsphinx Trigger found voice command: " + voice_command)
-
-    if voice_command == config['triggers']['pocketsphinx']['phrase_assistant']:
-        
-        cmd = "yes ' ' | /home/pi/env/bin/python -m googlesamples.assistant"
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        
-        while True:
-            time.sleep(0.25)
-
-            #line = process.stdout.readline()
-            #o = line.rstrip() # o == output
-            o = process.stdout.readline()
-            o = b''.join(o).decode("utf-8")
-
-            if o != '':
-                logger.debug("google handler found this: " + o)
-                if 'Press Enter' in o:
-                    logger.debug("google handler: close google script now")
-                    process.kill()
-                    break
-            else:
-                logger.debug("google handler found no line")
-
-        return True
-    else:
-        return False
