@@ -42,5 +42,5 @@ function install_assistant {
 }
 
 function auth_assistant {
-	/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json
+	sudo -u pi sh -c '/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json'
 }

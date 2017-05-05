@@ -32,16 +32,12 @@ You will need:
     ```
 - Prepare Amazon AVS Credentials as described in [Step 1 in AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation), you'll need them during Installation. Even if you only want Google Assistant, this has to be done for AlexaPi to work properly.
 - Connect your audio peripherals (i.e. USB-Mic and Speaker via Jack).
-- Clone this repository to `/opt` directory (important, it will fail otherwise).
+- Clone this repository to `/opt` directory and rename the folder to *AlexaPi* (both important, it will fail otherwise):
 	```
     cd /opt
-	sudo git clone https://github.com/xtools-at/AssistantPi.git
+	sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
     ```
-- Rename the cloned folder to *AlexaPi* to maintain compatibility (sorry for renaming the repository ;) ).
-	```
-	sudo mv AssistantPi AlexaPi
-	```
-- Run the setup and go through all the steps:
+- Run the setup and go through all the steps. This will take a while, approx. 25min with a good Internet connection.
 	```
     sudo /opt/AlexaPi/src/scripts/setup.sh
     ```
@@ -49,6 +45,8 @@ You will need:
 	```
     /opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json
     ```
+- If you haven't opted for starting AssistantPi at boot, or the Installer threw an error during setup, start the script manually using `python /opt/AlexaPi/src/main.py`. Otherwise, it will be started automatically when the setup finishes.
+- Trigger Assistant and Alexa with the hotwords *Google* and *Alexa*
 
 
 ## Audio problems
@@ -57,7 +55,7 @@ Make sure you've been to
 ```
 sudo raspi-config
 ```
-in *Advanced Options > Audio* and have set the desired audio output (i.e. HDMI or 3.5mm Jack).
+in *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
 
 Please refer to the following guides if you encounter any audio problems:
 

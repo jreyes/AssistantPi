@@ -283,11 +283,13 @@ echo ""
 ### Start AlexaPi service after install
 echo ""
 echo ""
-echo "Starting service..."
+echo "AssistantPi Installer finished"
+echo ""
+echo ""
+echo "Starting AlexaPi service..."
 systemctl start AlexaPi.service
 echo ""
-echo "Checking service..."
+echo "Checking AlexaPi service..."
 sleep 1
 systemctl status AlexaPi.service
-echo ""
-echo "AssistantPi Installer finished"
+echo "Exiting Installer..."
