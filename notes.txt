@@ -15,3 +15,6 @@ https://github.com/alexa-pi/AlexaPi
 
 #Install Tenacity again in env
 	(env) pip install tenacity
+
+#Setup
+	- install forked SDK

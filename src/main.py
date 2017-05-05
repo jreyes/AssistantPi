@@ -346,7 +346,7 @@ def assistant_handler(voice_command):
         # Start Assistant
         logger.debug("Assistant triggered, starting...")
         
-        cmd = "sudo -u pi sh -c 'cd /opt/AlexaPi; /home/pi/env/bin/python -m assistant'"
+        cmd = "sudo -u pi sh -c '/home/pi/env/bin/python -m googlesamples.assistant'"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
         # Get exit signal
