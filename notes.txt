@@ -1,16 +1,26 @@
 https://github.com/googlesamples/assistant-sdk-python
 	https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/
-	https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio
-
 
 https://github.com/alexa-pi/AlexaPi
-	https://github.com/alexa-pi/AlexaPi/wiki/Installation
 
-#Sound:
-	set to desired output (hdmi/jack) using sudo raspi-config > Advanced Options > Audio
-
-#Install Tenacity again in env
-	(env) pip install tenacity
 
 #Setup
-	- install forked SDK
+	*) Have your Raspberry Pi running Raspbian and connected to the Internet. I recommend to use a fresh install of Raspbian Jessie Lite without Pixel.
+	*) Follow this Google Guide (https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account) and place the Google Assistant Credentials JSON in /home/pi/Downloads
+	*) Prepare Amazon AVS Credentials as described in Step 1 in AlexaPi Installation Guide(https://github.com/alexa-pi/AlexaPi/wiki/Installation)
+	*) Connect your audio peripherals (i.e. USB-Mic and Speaker via Jack).
+	*) Clone this repository to /opt (This is important!)
+		cd /opt
+		sudo git clone https://github.com/xtools-at/AlexaPi.git
+	*) Run setup and take all required steps
+		sudo /opt/AlexaPi/src/scripts/setup.sh
+
+#Audio problems
+	If you're using HDMI, make sure to go to
+	sudo raspi-config
+	> Advanced Options > Audio
+	and set the desired output (i.e. HDMI or 3.5mm Jack).
+	
+	Please refer to the following guides if you encounter any audio problems:
+	Configure Google Assistant Audio Output(https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
+	AlexaPi Audio Setup and Debugging(https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging)

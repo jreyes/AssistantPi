@@ -131,6 +131,7 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
 fi
 
 read -r -p "Would you like to also install Airplay support (Y/n)? " shairport
+read -r -p "Install Google Assistant (y/n)? " assistant
 
 install_os
 
@@ -229,7 +230,7 @@ echo ""
 echo "-- AlexaPi Setup complete. --"
 echo ""
 echo ""
-read -r -p "Now to what we're here for: Install Google Assistant (y/n)? " assistant
+
 case $assistant in
         [yY] )
                 echo ""
