@@ -344,19 +344,26 @@ def assistant_handler(voice_command):
     if voice_command == voice_command_assistant:
 
         logger.debug("Assistant triggered, starting...")
-        # Play Sound
-        player.play_speech(resources_path + 'okgoogle.mp3')
-
         # Start Assistant
-        cmd = "sudo -u pi sh -c '/opt/AlexaPi/env/bin/python -m googlesamples.assistant'"
+        #cmd = "sudo -u pi sh -c '/opt/AlexaPi/env/bin/python -m googlesamples.assistant'"
+        cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
-        # Get exit signal
-        out = process.stdout.readline()
-        out = b''.join(out).decode("utf-8")
-        if 'exit' in out:
-            logger.debug("assistant_handler: conversation complete, moving on")
-            process.kill()
+        # Get signals
+        exit = False
+        ready = False
+
+        while not exit:
+            out = process.stdout.readline()
+            out = b''.join(out).decode("utf-8")
+            if 'exit' in out:
+                logger.debug("assistant_handler: conversation complete, moving on")
+                process.kill()
+                exit = True
+                break
+            elif 'ready' in out and not ready:
+                player.play_speech(resources_path + 'okgoogle.mp3')
+                ready = True
 
         return True
     else:

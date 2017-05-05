@@ -189,7 +189,7 @@ case ${config_action} in
     ;;
     *)
         echo "Exiting ..."
-        exit
+        #exit
     ;;
 
 esac
@@ -251,6 +251,10 @@ case $assistant in
                 echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
                 echo "-- Get your OAuth Credentials-JSON file ready --"
                 echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
+                echo ""
+                echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
+                echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
+                echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
                 echo "######################################################################################################"
                 echo ""
                 read -r -p "Are you ready? If the file's not there or you don't finish the process, you have to do it manually afterwards (Y/n) " configReady
@@ -258,17 +262,17 @@ case $assistant in
                         [yY] )
                             auth_assistant
                         ;;
-                        ) ;;
+                        *) ;;
                     esac
                 echo ""
                 echo "######################################################################################################"
                 echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
-                echo "source /home/pi/env/bin/activate; python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json; deactivate"
+                echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
                 echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
                 echo "######################################################################################################"
                 echo ""
         ;;
-        ) ;;
+        *) ;;
 esac
 ###
 

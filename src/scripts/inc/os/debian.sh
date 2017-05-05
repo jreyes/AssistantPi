@@ -30,13 +30,14 @@ function install_assistant {
 
 	# Install forked Assistant SDK
 	cd /opt/AlexaPi/src
+	sudo rm -rf assistant-sdk-python
 	sudo git clone https://github.com/xtools-at/assistant-sdk-python.git
 	cd assistant-sdk-python
 	/opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
 
-	/opt/AlexaPi/env/pip install tenacity
+	/opt/AlexaPi/env/bin/pip install tenacity
 }
 
 function auth_assistant {
-	sudo -u pi sh -c '/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json'
+	/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json
 }
