@@ -66,7 +66,7 @@ Please refer to the following guides if you encounter any audio problems:
 To change the hotwords (currently Alexa and Google), change both these files before running the setup:
 
 ```
-.../src/config.yaml 
+.../src/config.template.yaml 
 ```
     
 (*phrase* and *phrase_assistant*) and
