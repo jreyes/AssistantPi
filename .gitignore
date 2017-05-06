@@ -8,3 +8,7 @@ src/config.yaml
 
 # Mac stuff
 *DS_Store
+
+# Things that get installed during setup
+assistant-sdk-python
+env
