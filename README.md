@@ -77,15 +77,20 @@ If you want to change the language for the hotword recognition (which might be n
 In particular, you have to place the following files
 - FILENAME.lm.bin
 - FILENAME.dic
+
 in `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/` and the contents of
+
 - FILENAME.tar.gz
+
 in `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/[lng-lng]` (where [lng-lng] is the language code of your imported language, e.g. 'de-de')
+
+Make sure, that `FILENAME.dic` contains your desired hotwords (i.e. *Alexa* and *Google* for default settings), if not, add them.
 
 Afterwards, either
 - change `/opt/AlexaPi/src/config.template.yaml`
-..- find `language` and `dictionary` attributes in `pocketsphinx` configuration
-..- change *language* to your language code (e.g. 'de-de', see above)
-..- change *dictionary* to your FILENAME.dic (e.g. 'cmusphinx-voxforge-de.dic')
+  - find `language` and `dictionary` attributes in `pocketsphinx` configuration
+  - change *language* to your language code (e.g. 'de-de', see above)
+  - change *dictionary* to your FILENAME.dic (e.g. 'cmusphinx-voxforge-de.dic')
 - run the Installer and create a new AlexaPi Profile
 
 **OR**
