@@ -87,7 +87,8 @@ Afterwards, either
 ..- change *language* to your language code (e.g. 'de-de', see above)
 ..- change *dictionary* to your FILENAME.dic (e.g. 'cmusphinx-voxforge-de.dic')
 - run the Installer and create a new AlexaPi Profile
-OR
+
+**OR**
 - change `/etc/opt/AlexaPi/config.yaml` the same way as above
 
 ### Install German language package
