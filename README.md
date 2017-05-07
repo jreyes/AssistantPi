@@ -59,16 +59,11 @@ Please refer to the following guides if you encounter any audio problems:
 
 To change the hotwords (currently Alexa and Google), change both these files before running the setup:
 
-```
-.../src/config.template.yaml 
-```
-    
-(*phrase* and *phrase_assistant*) and
-    
-```
-.../src/keyphrase.list
-```
+`.../src/config.template.yaml` (*phrase* and *phrase_assistant*) and `.../src/keyphrase.list`
+
 In the latter, you can also tweak the sensitivity of the hotword recognition. See [here for more information on this topic](http://cmusphinx.sourceforge.net/wiki/faq#qhow_to_implement_hot_word_listening).
+
+Also make sure that your new hotwords are included in the language model. Check the following directory for a file with `.dict` or `.dic` extension and add your hotwords if not already there: `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
 
 
 ## Change Hotword language
