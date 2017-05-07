@@ -16,7 +16,7 @@ function install_shairport-sync {
 
 function install_assistant {
 	# Prequisiteries
-	apt-get install python3-dev python3-venv -y
+	apt-get install python3 python3-dev python3-venv -y
 	apt-get install portaudio19-dev libffi-dev libssl-dev -y
 
 	# Setup Virtual Environment

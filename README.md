@@ -107,6 +107,10 @@ sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
 ```
 sudo git checkout feature/german
 ```
+- Install pocketsphinx. This is the responsible module for the hotword recognition.
+```
+pip install pocketsphinx
+```
 - Install the language package, running as root (or copy the files in .../src/german manually as described above):
 ```
 sudo bash /opt/AlexaPi/src/german/install.sh
