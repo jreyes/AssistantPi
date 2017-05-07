@@ -69,3 +69,40 @@ To change the hotwords (currently Alexa and Google), change both these files bef
 .../src/keyphrase.list
 ```
 In the latter, you can also tweak the sensitivity of the hotword recognition. See [here for more information on this topic](http://cmusphinx.sourceforge.net/wiki/faq#qhow_to_implement_hot_word_listening).
+
+
+## Change Hotword language
+
+If you want to change the language for the hotword recognition (which might be necessary if your hotwords aren't recognized well), head over to [CMU Sphinx download](https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/) page and get the model files for your language.
+In particular, you have to place the following files
+- FILENAME.lm.bin
+- FILENAME.dic
+in `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/` and the contents of
+- FILENAME.tar.gz
+in `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/[lng-lng]` (where [lng-lng] is the language code of your imported language, e.g. 'de-de')
+
+Afterwards, either
+- change `/opt/AlexaPi/src/config.template.yaml`
+..- find `language` and `dictionary` attributes in `pocketsphinx` configuration
+..- change *language* to your language code (e.g. 'de-de', see above)
+..- change *dictionary* to your FILENAME.dic (e.g. 'cmusphinx-voxforge-de.dic')
+- run the Installer and create a new AlexaPi Profile
+OR
+- change `/etc/opt/AlexaPi/config.yaml` the same way as above
+
+### Install German language package
+
+For **German**, there's an language package coming with AssistantPi. During the installation steps, just after you've cloned the repository:
+```
+cd /opt
+sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
+```
+- Change the branch to include the German language package and get the edited `config.yaml`:
+```
+sudo git checkout feature/german
+```
+- Install the language package, running as root (or copy the files in .../src/german manually as described above):
+```
+sudo bash /opt/AlexaPi/src/german/install.sh
+```
+- Proceed with Setup as above in the Installation instructions (i.e. run the AssistantPi installer script)
