@@ -46,7 +46,7 @@ class PlatformTrigger(BaseTrigger):
 	def platform_callback(self, platform_continuous_callback=None):
 		if self._enabled:
 			self._platform_continuous_callback = platform_continuous_callback
-			self._trigger_callback(self)
+			self._trigger_callback(self, "")
 
 			if self._platform_continuous_callback and self.long_press_setup:
 				long_press_thread = threading.Thread(target=self.long_press)

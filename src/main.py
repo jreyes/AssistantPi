@@ -334,7 +334,7 @@ def alexa_speech_recognizer_generate_data(audio, boundary):
 ### Assistant
 def assistant_handler(voice_command):
     # clean voice_command
-    voice_command = voice_command.replace(" ", "")
+    voice_command = voice_command.rstrip()
     logger.debug("Pocketsphinx Trigger found voice command: **" + voice_command + "**")
     
     # compare to phrase_assistant from config
@@ -564,11 +564,10 @@ def trigger_process(trigger, voice_command):
     if trigger.event_type in triggers.types_continuous:
         force_record = (trigger.continuous_callback, trigger.event_type in triggers.types_vad)
 
-    if trigger.voice_confirm:
-        player.play_speech(resources_path + 'alexayes.mp3')
-
     ### Assistant Override
     if not assistant_handler(voice_command):
+        if trigger.voice_confirm:
+            player.play_speech(resources_path + 'alexayes.mp3')
         audio_stream = capture.silence_listener(force_record=force_record)
         alexa_speech_recognizer(audio_stream)
     ###

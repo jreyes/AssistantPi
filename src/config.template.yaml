@@ -13,7 +13,7 @@ sound:
   # This is an override that is normally not needed and is a last resort.
   allow_unlisted_input_device: false
 
-  playback_handler: "sox"
+  playback_handler: "vlc"
 
   # you can go here with alsa, pulse or others
   # keep blank for the best audio output selected by the underlying code
@@ -77,7 +77,7 @@ triggers:
 
     phrase: "alexa"
     phrase_assistant: "google"
-    threshold: 1e-10
+    threshold: 1e-10 # unused, change in ./keyphrase.list
     language: "en-us"
     dictionary: "cmudict-en-us.dict"
 

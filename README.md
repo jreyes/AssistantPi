@@ -1,8 +1,6 @@
 # AssistantPi
 
-AssistantPi is basically a tweak of [AlexaPi](https://github.com/alexa-pi/AlexaPi), allowing you to run **Google Assistant** and Amazon's Alexa on a Raspberry Pi.
-
-I've piggy-backed AlexaPi's Installer to easily get the [Google Assistant SDK](https://github.com/googlesamples/assistant-sdk-python) ready on your device and utilized it's Hotword recognition to tap into Google's sample CLI interface.
+AssistantPi is basically a tweak of [AlexaPi](https://github.com/alexa-pi/AlexaPi) allowing you to run **Google Assistant** and **Amazon's Alexa** on a Raspberry Pi. It includes the [Google Assistant SDK](https://github.com/googlesamples/assistant-sdk-python) and uses AlexaPi's hotword recognition to activate either Assistant or Alexa. The installer provides an easy way to get everything set up in just under an hour.
 
 This is just an experimental proof-of-concept without broad support.
 
@@ -34,7 +32,7 @@ You will need:
     cd /opt
 	sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
     ```
-- Run the setup and go through all the steps. This will take a while, approx. 25min with a good Internet connection.
+- Run the setup and go through all the steps. This will take a while, approx. 25min with a somewhat good Internet connection.
 	```
     sudo /opt/AlexaPi/src/scripts/setup.sh
     ```
@@ -48,11 +46,7 @@ You will need:
 
 ## Audio problems
 
-Make sure you've been to
-```
-sudo raspi-config
-```
-in *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
+Make sure you've been to `sudo raspi-config`, *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
 
 Please refer to the following guides if you encounter any audio problems:
 
