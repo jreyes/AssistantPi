@@ -346,7 +346,6 @@ def assistant_handler(voice_command):
         logger.debug("Assistant triggered, starting...")
         
         # Start Assistant
-        subprocess.Popen("sox -q /opt/AlexaPi/src/resources/okgoogle_s.mp3 -t alsa default vol -6 dB pad 0 0".split())
         cmd = "sudo -u pi sh -c '/opt/AlexaPi/env/bin/python -m googlesamples.assistant'"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
