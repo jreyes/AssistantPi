@@ -59,9 +59,10 @@ Make sure you've been to `sudo raspi-config`, *Advanced Options > Audio* and hav
 
 Please refer to the following guides if you encounter any audio problems:
 
-[Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
-
-[AlexaPi Audio Setup and Debugging](https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging)
+- [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
+- [Google Assistant Troubleshooting](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting)
+- [AlexaPi Audio Setup and Debugging](https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging)
+- [AlexaPi Wiki](https://github.com/alexa-pi/AlexaPi/wiki/)
 
 
 ## Change Hotwords
