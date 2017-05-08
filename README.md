@@ -44,6 +44,15 @@ You will need:
 - Trigger Assistant and Alexa with the hotwords *Google* and *Alexa*
 
 
+## Updating
+
+Bringing your AssistantPi up-to-date is just one command away:
+```
+sudo /opt/AlexaPi/src/scripts/update.sh
+```
+This updates both AssistantPi and the [tweaked Assistant SDK](https://github.com/xtools-at/assistant-sdk-python) without having you to go through the installation process again.
+
+
 ## Audio problems
 
 Make sure you've been to `sudo raspi-config`, *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
@@ -110,4 +119,7 @@ pip install pocketsphinx
 ```
 sudo bash /opt/AlexaPi/src/german/install.sh
 ```
-- Proceed with Setup as above in the Installation instructions (i.e. run the AssistantPi installer script)
+- Proceed with steps above in the Installation instructions (i.e. run the AssistantPi installer script)
+```
+sudo /opt/AlexaPi/src/scripts/setup.sh
+```
