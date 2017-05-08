@@ -1,23 +1,23 @@
-Thank you for reporting an issue with **AlexaPi**.
+Thank you for reporting an issue with **AssistantPi**.
 
-Make sure you are running the latest version of **AlexaPi**, and look through [issues](https://github.com/alexa-pi/AlexaPi/issues?utf8=%E2%9C%93&q=is%3Aissue) before submitting.
+Please make sure you've updated to the latest version using
+```
+sudo /opt/AlexaPi/src/scripts/update.sh
+```
+This updates both AssistantPi and the [tweaked Assistant SDK](https://github.com/xtools-at/assistant-sdk-python) without having you to go through the installation process again.
 
-Check out our [Wiki](https://github.com/alexa-pi/AlexaPi/wiki/), and make sure to look at [Debugging](https://github.com/alexa-pi/AlexaPi/wiki/Debugging/), and [Audio debugging](https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging) in particular before filing an issue.
+
+Please check out these resources before submitting an issue:
+- [AlexaPi Wiki](https://github.com/alexa-pi/AlexaPi/wiki/)
+- [AlexaPi Debugging](https://github.com/alexa-pi/AlexaPi/wiki/Debugging/)
+- [AlexaPi Audio debugging](https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging)
+- [Google Assistant Troubleshooting](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting)
+- [Google Assistant Audio Configuration](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
 
 In order to help troubleshooting, be sure to include the following information:
 
-**Output of the [audio debugging script](https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging#audio-debugging-script).**
 
-**Your OS (including version) where you are running AlexaPi:**
-```
-```
-
-**Your hardware platform and model you are running on:**
-```
-
-```
-
-**Python release (`python2 --version`):**
+**Python 2 & 3 releases (`python2 --version` and `python3 --version`):**
 ```
 
 ```
@@ -28,11 +28,6 @@ In order to help troubleshooting, be sure to include the following information:
 ```
 
 **Expected:**
-```
-
-```
-
-**Problem-relevant `config.yaml` entries:**
 ```
 
 ```
