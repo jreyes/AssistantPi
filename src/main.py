@@ -358,8 +358,8 @@ def assistant_handler(voice_command):
             else:
                 flush_size = ""
         except:
-            logger.info("Old configuration file without Assistant audio settings detected. If encountering audio problems, run setup again and create a new configuration.")
-        
+            logger.debug("Old configuration file without Assistant audio settings detected. To be able to adjust Google Adio settings, run setup again and create a new configuration.")
+            logger.debug("see also https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting")
         # Start Assistant
         cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant"
         cmd = cmd + block_size + flush_size

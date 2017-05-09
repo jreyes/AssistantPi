@@ -87,16 +87,20 @@ sudo /opt/AlexaPi/src/scripts/update.sh
 This updates both AssistantPi and the [tweaked Assistant SDK](https://github.com/xtools-at/assistant-sdk-python) without having you to go through the installation process again.
 
 
-## Audio problems
+## Audio Settings
 
 Make sure you've been to `sudo raspi-config`, *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
 
-Please refer to the following guides if you encounter any audio problems:
-
+The base audio config is done for you in the setup for both AlexaPi and Assistant. However, if encountering any audio issues in playback or recording, make sure to check by here:
 - [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
-- [Google Assistant Troubleshooting](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting)
 - [AlexaPi Audio Setup and Debugging](https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging)
 - [AlexaPi Wiki](https://github.com/alexa-pi/AlexaPi/wiki/)
+
+If Google Assistant audio output is choppy or truncated, check the following. Make sure to run `source /opt/AlexaPi/env/bin/activate` before running the samples there, to target AssistantPi's Python environment.
+- [Google Assistant Audio Troubleshooting](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting#audio-issues)
+
+You can set the vales for the Block- and Flush size in the AssistantPi config, either before Installation in `/opt/AlexaPi/src/config.template.yaml` or afterwards in `/etc/opt/AlexaPi/config.yaml`. Go find the attribute `sound > assistant` and use your values for `block_size` and `flush_size`.
+
 
 
 ## Change Hotwords
