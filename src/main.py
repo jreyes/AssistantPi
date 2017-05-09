@@ -339,12 +339,10 @@ def assistant_handler(voice_command):
     
     # compare to phrase_assistant from config
     voice_command_assistant = config['triggers']['pocketsphinx']['phrase_assistant']
-    logger.debug("Compare to Assistant Command from Config: **" + voice_command_assistant + "**")
+    #logger.debug("Compare to Assistant Command from Config: **" + voice_command_assistant + "**")
     
     if voice_command == voice_command_assistant:
 
-        logger.debug("Assistant triggered, starting...")
-        
         # Check for Audio settings
         block_size = ""
         flush_size = ""
@@ -363,8 +361,10 @@ def assistant_handler(voice_command):
             logger.info("Old configuration file without Assistant audio settings detected. If encountering audio problems, run setup again and create a new configuration.")
         
         # Start Assistant
-        cmd = "sudo -u pi sh -c '/opt/AlexaPi/env/bin/python -m googlesamples.assistant'"
+        cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant"
         cmd = cmd + block_size + flush_size
+        logger.debug("Assistant triggered, starting tweaked SDK with command " + cmd)
+        cmd = "sudo -u pi sh -c '" + cmd + "'"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
         # Get signals
