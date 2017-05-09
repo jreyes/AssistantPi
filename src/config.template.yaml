@@ -37,6 +37,24 @@ sound:
   # the sox handler supports this configuration option.
   playback_padding: 0
 
+  # Google Assistant SDK Audio Adjustments
+  #
+  # If using a USB speaker or dedicated soundcard,
+  # set block size to `0` to automatically adjust the buffer size.
+  #
+  # If using the line-out 3.5mm audio jack on the Raspberry Pi,
+  # set block size to a value larger than the `ConverseResponse` audio payload size
+  # e.g. 3200
+  #
+  # see https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting
+  # (licensed under the Creative Commons Attribution 3.0 License, code samples are licensed under the Apache 2.0 License)
+  #
+  # Test for your self and use the best block size value in the settings below:
+  # /opt/alexaPi/env/bin/python -m googlesamples.assistant --audio-block-size=<test_value>
+  assistant:
+    block_size: ""
+    flush_size: ""
+
 # Amazon Alexa settings
 alexa:
   Client_ID:
