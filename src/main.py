@@ -346,17 +346,22 @@ def assistant_handler(voice_command):
         logger.debug("Assistant triggered, starting...")
         
         # Check for Audio settings
-        block_size = config['sound']['assistant']['block_size']
-        flush_size = config['sound']['assistant']['flush_size']
-        if block_size is not None and block_size is not "":
-            block_size = " --audio-block-size=" + block_size
-        else:
-            block_size = ""
-        if flush_size is not None and flush_size is not "":
-            flush_size = " --audio-flush-size=" + flush_size
-        else:
-            flush_size = ""
-
+        block_size = ""
+        flush_size = ""
+        try:
+            block_size = config['sound']['assistant']['block_size']
+            flush_size = config['sound']['assistant']['flush_size']
+            if block_size is not None and block_size is not "":
+                block_size = " --audio-block-size=" + block_size
+            else:
+                block_size = ""
+            if flush_size is not None and flush_size is not "":
+                flush_size = " --audio-flush-size=" + flush_size
+            else:
+                flush_size = ""
+        except:
+            logger.info("Old configuration file without Assistant audio settings detected. If encountering audio problems, run setup again and create a new configuration.")
+        
         # Start Assistant
         cmd = "sudo -u pi sh -c '/opt/AlexaPi/env/bin/python -m googlesamples.assistant'"
         cmd = cmd + block_size + flush_size
