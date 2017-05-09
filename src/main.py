@@ -350,11 +350,11 @@ def assistant_handler(voice_command):
             block_size = config['sound']['assistant']['block_size']
             flush_size = config['sound']['assistant']['flush_size']
             if block_size is not None and block_size is not "":
-                block_size = " --audio-block-size=" + block_size
+                block_size = " --audio-block-size=" + str(block_size)
             else:
                 block_size = ""
             if flush_size is not None and flush_size is not "":
-                flush_size = " --audio-flush-size=" + flush_size
+                flush_size = " --audio-flush-size=" + str(flush_size)
             else:
                 flush_size = ""
         except:
