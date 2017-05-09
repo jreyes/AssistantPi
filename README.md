@@ -43,6 +43,40 @@ You will need:
 - If you haven't opted for starting AssistantPi at boot, or the Installer threw an error during setup, start the script manually using `python /opt/AlexaPi/src/main.py`. Otherwise, it will be started automatically when the setup finishes.
 - Trigger Assistant and Alexa with the hotwords *Google* and *Alexa*
 
+### Setup problems
+For some users, the setup fails with this error:
+
+```
+Could not import runpy module
+Traceback (most recent call last):
+File "", line 2237, in _find_and_load
+File "", line 2222, in _find_and_load_unlocked
+File "", line 2164, in _find_spec
+File "", line 1940, in find_spec
+File "", line 1911, in _get_spec
+File "", line 1879, in _path_importer_cache
+FileNotFoundError: [Errno 2] No such file or directory
+```
+
+This means there have been troubles setting up the Python virtual environment Google Assistant needs during installation. I haven't figured out yet what's causing this, but if you encounter this issue, do the following:
+
+- In the setup, don't install Google Assistant, but finish everything AlexaPi-related. The setup shouldn't have crashed now and AlexaPi should be running.
+- Run `python3 -m venv /opt/AlexaPi/env` and check if there is a folder `env` in _/opt/AlexaPi_
+- Run the steps of AssistantPi's Google Assistant setup manually:
+```
+sudo /opt/AlexaPi/env/bin/pip install pip setuptools --upgrade
+cd /opt/AlexaPi/src
+sudo rm -rf assistant-sdk-python
+sudo git clone https://github.com/xtools-at/assistant-sdk-python.git
+cd /opt/AlexaPi/src/assistant-sdk-python
+sudo /opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
+cp /opt/AlexaPi/src/assistant.example.asoundrc /home/pi/.asoundrc
+```
+- Do the Authentication with Google API manually:
+```
+sudo /opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json
+```
+
 
 ## Updating
 
