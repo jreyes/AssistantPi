@@ -99,7 +99,7 @@ The base audio config is done for you in the setup for both AlexaPi and Assistan
 If Google Assistant audio output is choppy or truncated, check the following. Make sure to run `source /opt/AlexaPi/env/bin/activate` before running the samples there, to target AssistantPi's Python environment.
 - [Google Assistant Audio Troubleshooting](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting#audio-issues)
 
-You can set the vales for the Block- and Flush size in the AssistantPi config, either before Installation in `/opt/AlexaPi/src/config.template.yaml` or afterwards in `/etc/opt/AlexaPi/config.yaml`. Go find the attribute `sound > assistant` and use your values for `block_size` and `flush_size`.
+You can set the values for the Block- and Flush size in the AssistantPi config, either before Installation in `/opt/AlexaPi/src/config.template.yaml` or afterwards in `/etc/opt/AlexaPi/config.yaml`. Go find the attribute `sound > assistant` and use your values for `block_size` and `flush_size`.
 
 
 
