@@ -15,7 +15,7 @@ Credits / Further Resources:
 
 You will need:
 
-1. A Raspberry Pi and an SD Card with a fresh install of Raspbian
+1. A Raspberry Pi and an SD Card with a fresh install of [Raspbian Jessie Lite](https://www.raspberrypi.org/downloads/raspbian/)
 2. Audio peripherals:
     - external speaker with 3.5mm Jack
     - USB microphone
@@ -32,7 +32,7 @@ You will need:
     cd /opt
 	sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
     ```
-- Run the setup and go through all the steps. This will take a while, approx. 25min with a somewhat good Internet connection.
+- Run the setup and go through all the steps. This will take a while, approx. 30min with a somewhat good Internet connection.
 	```
     sudo /opt/AlexaPi/src/scripts/setup.sh
     ```
@@ -58,11 +58,11 @@ File "", line 1879, in _path_importer_cache
 FileNotFoundError: [Errno 2] No such file or directory
 ```
 
-This means there have been troubles setting up the Python virtual environment Google Assistant needs during installation. I haven't figured out yet what's causing this, but if you encounter this issue, do the following:
+This means there have been troubles setting up the Python virtual environment Google Assistant needs during installation. I haven't figured out yet what's causing this, but if you are encountering this issue, please do the following in the meantime:
 
-- In the setup, don't install Google Assistant, but finish everything AlexaPi-related. The setup shouldn't have crashed now and AlexaPi should be running.
+- In the setup, don't install Google Assistant, but finish everything AlexaPi-related properly. The setup shouldn't have crashed now and AlexaPi should be running.
 - Run `python3 -m venv /opt/AlexaPi/env` and check if there is a folder `env` in _/opt/AlexaPi_
-- Run the steps of AssistantPi's Google Assistant setup manually:
+- Run the steps of the Google Assistant setup manually:
 ```
 sudo /opt/AlexaPi/env/bin/pip install pip setuptools --upgrade
 cd /opt/AlexaPi/src
@@ -144,6 +144,7 @@ sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
 ```
 - Change the branch to include the German language package and get the edited `config.yaml`:
 ```
+cd /opt/AlexaPi
 sudo git checkout feature/german
 ```
 - Install pocketsphinx. This is the responsible module for the hotword recognition.
