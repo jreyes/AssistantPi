@@ -27,7 +27,7 @@ You will need:
 - Follow this [Google Guide](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account) and place the Google Assistant Credentials JSON in `/home/pi/Downloads/client_secret.json`
 - Prepare Amazon AVS Credentials as described in [Step 1 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation), you'll need them during Installation. Even if you only want Google Assistant, this has to be done for AlexaPi to work properly.
 - Connect your audio peripherals (i.e. USB-Mic and Speaker via Jack).
-- Clone this repository to `/opt` directory and rename the folder to *AlexaPi* (both important, it will fail otherwise):
+- Clone this repository to `/opt` directory and rename the folder to *AlexaPi* (both important, it will fail otherwise). These commands will do that for you:
 ```
 cd /opt
 sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
