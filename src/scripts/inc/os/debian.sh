@@ -20,13 +20,8 @@ function install_assistant {
 	apt-get install portaudio19-dev libffi-dev libssl-dev -y
 
 	# Setup Virtual Environment
-	python3 -m venv /opt/AlexaPi/env
+	sudo python3 -m venv /opt/AlexaPi/env
 	/opt/AlexaPi/env/bin/pip install pip setuptools --upgrade
-
-	#set +o nounset
-	#source /home/pi/env/bin/activate
-	#set -o nounset
-	#python -m pip install google-assistant-sdk[samples]
 
 	# Install forked Assistant SDK
 	cd /opt/AlexaPi/src
