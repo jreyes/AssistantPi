@@ -116,13 +116,20 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
 
         cd "${SCRIPT_DIRECTORY}"
 
+        ###
+        init_systemd ${monitorAlexa}
+        ###
+
         case ${init_type} in
             2 ) # classic
                 # init_classic ${monitorAlexa}
             ;;
 
             * ) # systemd
-                init_systemd ${monitorAlexa}
+                #init_systemd ${monitorAlexa}
+                ###
+                systemctl enable AlexaPi.service
+                ###
             ;;
         esac
 

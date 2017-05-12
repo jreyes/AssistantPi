@@ -39,7 +39,7 @@ sudo /opt/AlexaPi/src/scripts/setup.sh
 - If Authentication with Google Assistant API fails during setup, try to run it manually with `sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh`
 - If Google Assistant setup crashes, do what the Error message says and restart with `sudo bash /opt/AlexaPi/src/scripts/install_assistant.sh`
 - Proceed with [Step 3 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation).
-- Make sure to check [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio) too. The config file is already in place for you (`/home/pi/.asoundrc`), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
+- Make sure to check [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio) too. The config file is already in place for you (`/home/pi/.asoundrc` and `/var/lib/AlexaPi/.asoundrc` for the bootup-service), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
 - Trigger Assistant and Alexa with the hotwords *Google* and *Alexa*.
 
 
