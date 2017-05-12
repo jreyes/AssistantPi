@@ -28,6 +28,7 @@ if [ -d "/opt/AlexaPi/env" ]; then
 	echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /etc/asound.conf"
 	echo "See here for more information: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio"
 	# Put default Sound config in place
+	{sudo mv /etc/asound.conf /etc/asound.conf.bkp} || {}
 	sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
 	sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
 
