@@ -361,10 +361,9 @@ def assistant_handler(voice_command):
             logger.debug("Old configuration file without Assistant audio settings detected. To be able to adjust Google Adio settings, run setup again and create a new configuration.")
             logger.debug("see also https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting")
         # Start Assistant
-        cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant"
+        cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant --credentials /etc/opt/AlexaPi/assistant_credentials.json"
         cmd = cmd + block_size + flush_size
         logger.debug("Assistant triggered, starting tweaked SDK with command " + cmd)
-        cmd = "sudo -u pi sh -c '" + cmd + "'"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
         # Get signals

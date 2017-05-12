@@ -100,7 +100,7 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
 	echo "You have these options: "
 	echo "0 - NO"
 	echo "1 - yes, use systemd (default, RECOMMENDED and awesome)"
-	echo "2 - yes, use a classic init script (for a very old PC or an embedded system)"
+	# echo "2 - yes, use a classic init script (for a very old PC or an embedded system)"
 	read -r -p "Which option do you prefer? [1]: " init_type
 
     if [ "${init_type// /}" != "0" ]; then
@@ -118,7 +118,7 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
 
         case ${init_type} in
             2 ) # classic
-                init_classic ${monitorAlexa}
+                # init_classic ${monitorAlexa}
             ;;
 
             * ) # systemd
@@ -154,25 +154,6 @@ case $shairport in
                 systemctl enable shairport-sync
         ;;
 esac
-
-### Assistant
-case $assistant in
-        [nN] ) ;;
-        *)
-            echo ""
-            echo "######################################################################################################"
-            echo "-- installing Assistant - this might take a while, go grab a coffee and check back in 10-15min --"
-            echo "-- in the meantime, go visit "
-            echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
-            echo "-- Get your OAuth Credentials-JSON file ready --"
-            echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
-            echo "######################################################################################################"
-            echo ""
-
-            install_assistant
-        ;;
-esac
-###
 
 cd "${ALEXASRC_DIRECTORY}"
 echo ""
@@ -242,33 +223,12 @@ config_set 'Client_Secret' "${Client_Secret}"
 run_python ./auth_web.py
 
 ### Assistant
-echo ""
-echo "######################################################################################################"
-echo "-- Let's authenticate with Google Assistant API. Go visit and follow"
-echo "https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account"
-echo "-- Get your OAuth Credentials-JSON file ready --"
-echo "-- and rename/move it to /home/pi/Downloads/client_secret.json --"
-echo ""
-echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
-echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
-echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
-echo "######################################################################################################"
-echo ""
-read -r -p "Are you ready? If the file's not there or you don't finish the process, you have to do it manually afterwards (Y/n) " config_ready
-    case $config_ready in
-        [Nn] ) ;;
-        *)
-            auth_assistant
-        ;;
-        
-    esac
-echo ""
-echo "######################################################################################################"
-echo "-- You can do this manually, if Authentification with Google API failed before. Place your OAuth Credentials JSON in /home/pi/Downloads/client_secret.json and run this: --"
-echo "/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json"
-echo "-- see also: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/run-sample"
-echo "######################################################################################################"
-echo ""
+case $assistant in
+    [nN] ) ;;
+    *)
+        sudo bash /opt/AlexaPi/src/scripts/install_assistant.sh
+    ;;
+esac
 ###
 
 echo ""
@@ -285,11 +245,15 @@ echo ""
 echo ""
 echo "AssistantPi Installer finished"
 echo ""
-echo ""
-echo "Starting AlexaPi service..."
-systemctl start AlexaPi.service
-echo ""
-echo "Checking AlexaPi service..."
-sleep 1
-systemctl status AlexaPi.service
+if [ "${init_type}" == "1" ]; then
+    echo ""
+    echo "Starting AlexaPi service..."
+    systemctl start AlexaPi.service
+    echo ""
+    echo "Checking AlexaPi service..."
+    sleep 1
+    systemctl status AlexaPi.service
+    echo ""
+fi
+
 echo "Exiting Installer..."

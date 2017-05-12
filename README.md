@@ -41,7 +41,7 @@ sudo /opt/AlexaPi/src/scripts/setup.sh
 /opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json
 ```
 - Proceed with [Step 3 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation).
-- Make sure to check [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/) too. The config file is already in place for you (`/home/pi/.asoundrc`), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
+- Make sure to check [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio) too. The config file is already in place for you (`/home/pi/.asoundrc`), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
 - Trigger Assistant and Alexa with the hotwords *Google* and *Alexa*.
 
 ### Setup problems
