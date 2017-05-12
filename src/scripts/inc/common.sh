@@ -39,7 +39,7 @@ function init_systemd {
     fi
 
     systemctl daemon-reload
-    systemctl enable AlexaPi.service
+    #systemctl enable AlexaPi.service
 }
 
 function create_user {

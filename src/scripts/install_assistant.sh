@@ -41,8 +41,8 @@ echo "See here for more information: https://developers.google.com/assistant/sdk
 # Put default sound config in place
 #sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
 #sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
-sudo cp /opt/AlexaPi/src/assistant.asound.conf /var/lib/AlexaPi/.asoundrc
 sudo cp /opt/AlexaPi/src/assistant.asound.conf /home/pi/.asoundrc
+sudo cp /opt/AlexaPi/src/assistant.asound.conf /var/lib/AlexaPi/.asoundrc
 
 # Set up AlexaPi Pulseaudio support
 sudo mkdir -p /var/lib/AlexaPi/.config/pulse
@@ -68,4 +68,4 @@ case $start_auth in
 	;;
 esac
 echo ""
-echo "-- Installation successful, please reboot now."
+echo "-- Installation successful, please reboot your Pi now:  sudo reboot now"

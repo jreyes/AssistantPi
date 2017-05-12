@@ -9,9 +9,7 @@ case $bkp in
     [Yy] )
 		echo ""
 		echo "## Backup config files"
-		cd /opt
-		sudo mkdir AlexaPi-bkp
-		sudo mkdir AlexaPi-bkp/src
+		sudo mkdir -p /opt/AlexaPi-bkp/src
 		sudo cp /opt/AlexaPi/src/assistant.asound.conf /opt/AlexaPi-bkp/src/assistant.asound.conf
 		sudo cp /opt/AlexaPi/src/config.template.yaml /opt/AlexaPi-bkp/src/config.template.yaml
 	;;
