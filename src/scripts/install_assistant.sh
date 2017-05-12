@@ -27,10 +27,23 @@ if [ -d "/opt/AlexaPi/env" ]; then
 
 	echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /etc/asound.conf"
 	echo "See here for more information: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio"
-	# Put default Sound config in place
-	{sudo mv /etc/asound.conf /etc/asound.conf.bkp} || {}
+	# Put default sound config in place
+	{ sudo mv /etc/asound.conf /etc/asound.conf.bkp } || {}
 	sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
 	sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
+
+	# Set up AlexaPi Pulseaudio support
+	sudo mkdir -p /var/lib/AlexaPi/.config/pulse
+	sudo cp /etc/pulse/client.conf /var/lib/AlexaPi/.config/pulse/
+	sudo sed -i 's/autospawn = yes/autospawn = no/gi' /var/lib/AlexaPi/.config/pulse/client.conf
+	##
+	sudo adduser pulse audio
+	sudo adduser pi pulse-access
+	sudo adduser alexapi pulse-access
+	##
+	sudo cp /opt/AlexaPi/src/pulseaudio.service /etc/systemd/system/pulseaudio.service
+	sudo systemctl enable pulseaudio.service
+
 
 	echo ""
 	echo "## Auhentication with Google API"

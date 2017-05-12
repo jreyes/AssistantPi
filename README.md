@@ -23,7 +23,7 @@ You will need:
 
 ## Installation
 
-- Have your Raspberry Pi running Raspbian ready and connected to the Internet. I recommend to use a fresh install of *Raspbian Jessie Lite* without Pixel.
+- Have your Raspberry Pi running Raspbian ready and connected to the Internet. Use a fresh install of *Raspbian Jessie Lite* without Pixel.
 - Follow this [Google Guide](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/config-dev-project-and-account) and place the Google Assistant Credentials JSON in `/home/pi/Downloads/client_secret.json`
 - Prepare Amazon AVS Credentials as described in [Step 1 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation), you'll need them during Installation. Even if you only want Google Assistant, this has to be done for AlexaPi to work properly.
 - Connect your audio peripherals (i.e. USB-Mic and Speaker via Jack).
@@ -36,54 +36,18 @@ sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
 ```
 sudo /opt/AlexaPi/src/scripts/setup.sh
 ```
-- If Authentication with Google Assistant API fails during setup, try to run it manually:
-```
-/opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json
-```
+- If Authentication with Google Assistant API fails during setup, try to run it manually with `sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh`
+- If Google Assistant setup crashes, do what the Error message says and restart with `sudo bash /opt/AlexaPi/src/scripts/install_assistant.sh`
 - Proceed with [Step 3 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation).
 - Make sure to check [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio) too. The config file is already in place for you (`/home/pi/.asoundrc`), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
 - Trigger Assistant and Alexa with the hotwords *Google* and *Alexa*.
-
-### Setup problems
-For some users, the setup fails with this error:
-
-```
-Could not import runpy module
-Traceback (most recent call last):
-File "", line 2237, in _find_and_load
-File "", line 2222, in _find_and_load_unlocked
-File "", line 2164, in _find_spec
-File "", line 1940, in find_spec
-File "", line 1911, in _get_spec
-File "", line 1879, in _path_importer_cache
-FileNotFoundError: [Errno 2] No such file or directory
-```
-
-This means there have been troubles setting up the Python virtual environment Google Assistant needs during installation. I haven't figured out yet what's causing this, but if you are encountering this issue, please do the following in the meantime:
-
-- In the setup, don't install Google Assistant, but finish everything AlexaPi-related properly. The setup shouldn't have crashed now and AlexaPi should be running.
-- Run `python3 -m venv /opt/AlexaPi/env` and check if there is a folder `env` in _/opt/AlexaPi_
-- Run the steps of the Google Assistant setup manually:
-```
-sudo /opt/AlexaPi/env/bin/pip install pip setuptools --upgrade
-cd /opt/AlexaPi/src
-sudo rm -rf assistant-sdk-python
-sudo git clone https://github.com/xtools-at/assistant-sdk-python.git
-cd /opt/AlexaPi/src/assistant-sdk-python
-sudo /opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
-cp /opt/AlexaPi/src/assistant.example.asoundrc /home/pi/.asoundrc
-```
-- Do the Authentication with Google API manually:
-```
-sudo /opt/AlexaPi/env/bin/python -m googlesamples.assistant.auth_helpers --client-secrets /home/pi/Downloads/client_secret.json
-```
 
 
 ## Updating
 
 Bringing your AssistantPi up-to-date is just one command away:
 ```
-sudo /opt/AlexaPi/src/scripts/update.sh
+sudo bash /opt/AlexaPi/src/scripts/update.sh
 ```
 This updates both AssistantPi and the [tweaked Assistant SDK](https://github.com/xtools-at/assistant-sdk-python) without having you to go through the installation process again.
 
@@ -130,37 +94,22 @@ in `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/[lng-lng]` (where 
 
 Make sure, that `FILENAME.dic` contains your desired hotwords (i.e. *Alexa* and *Google* for default settings), if not, add them.
 
-Afterwards, either
-- change `/opt/AlexaPi/src/config.template.yaml`
+Afterwards,
+- change `/etc/opt/AlexaPi/config.yaml`
   - find `language` and `dictionary` attributes in `pocketsphinx` configuration
   - change *language* to your language code (e.g. 'de-de', see above)
   - change *dictionary* to your FILENAME.dic (e.g. 'cmusphinx-voxforge-de.dic')
-- run the Installer and create a new AlexaPi Profile
 
-**OR**
-- change `/etc/opt/AlexaPi/config.yaml` the same way as above
 
 ### Install German language package
 
-For **German**, there's an language package coming with AssistantPi. During the installation steps, just after you've cloned the repository:
+- [Download package from here](http://dl.xtools.at/pocketsphinx-german.zip) and unzip.
+- Move contents to `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
+- Edit your _config.yaml_ and include new values
 ```
-cd /opt
-sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
-```
-- Change the branch to include the German language package and get the edited `config.yaml`:
-```
-cd /opt/AlexaPi
-sudo git checkout feature/german
-```
-- Install pocketsphinx. This is the responsible module for the hotword recognition.
-```
-pip install pocketsphinx
-```
-- Install the language package, running as root (or copy the files in .../src/german manually as described above):
-```
-sudo bash /opt/AlexaPi/src/german/install.sh
-```
-- Proceed with steps above in the Installation instructions (i.e. run the AssistantPi installer script)
-```
-sudo /opt/AlexaPi/src/scripts/setup.sh
+sudo nano /etc/opt/AlexaPi.config.yaml
+
+#...
+# find pocketsphinx > language, change to 'de-de'
+# find pocketsphinx > dictionary, change to 'cmusphinx-voxforge-de.dic'
 ```

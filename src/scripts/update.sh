@@ -3,7 +3,7 @@ echo ""
 echo "Starting AssistantPi Quick Update..."
 echo "#############################################"
 echo "This will wipe all changes you may have done to /opt/AlexaPi."
-read -r -p "Backup your config.template.yaml and assistant.example.asoundrc ? [y/N]: " bkp
+read -r -p "Backup your config.template.yaml and assistant.asound.conf ? [y/N]: " bkp
 
 case $bkp in
     [Yy] )
@@ -12,7 +12,7 @@ case $bkp in
 		cd /opt
 		sudo mkdir AlexaPi-bkp
 		sudo mkdir AlexaPi-bkp/src
-		sudo cp /opt/AlexaPi/src/assistant.example.asoundrc /opt/AlexaPi-bkp/src/assistant.example.asoundrc
+		sudo cp /opt/AlexaPi/src/assistant.asound.conf /opt/AlexaPi-bkp/src/assistant.asound.conf
 		sudo cp /opt/AlexaPi/src/config.template.yaml /opt/AlexaPi-bkp/src/config.template.yaml
 	;;
     *)
@@ -39,7 +39,7 @@ case $bkp in
     [Yy] )
 		echo ""
 		echo "## Reinstall backed up files"
-		sudo mv /opt/AlexaPi-bkp/src/assistant.example.asoundrc /opt/AlexaPi/src/assistant.example.asoundrc
+		sudo mv /opt/AlexaPi-bkp/src/assistant.asound.conf /opt/AlexaPi/src/assistant.asound.conf
 		sudo mv /opt/AlexaPi-bkp/src/config.template.yaml /opt/AlexaPi/src/config.template.yaml
 		sudo rm -rf /opt/AlexaPi-bkp
 	;;
