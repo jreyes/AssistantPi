@@ -36,11 +36,13 @@ cd /opt/AlexaPi/src/assistant-sdk-python
 /opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
 /opt/AlexaPi/env/bin/pip install tenacity
 
-echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /etc/asound.conf"
+echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /var/lib/AlexaPi and /home/pi"
 echo "See here for more information: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio"
 # Put default sound config in place
-sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
-sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
+#sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
+#sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
+sudo cp /opt/AlexaPi/src/assistant.asound.conf /var/lib/AlexaPi/.asoundrc
+sudo cp /opt/AlexaPi/src/assistant.asound.conf /home/pi/.asoundrc
 
 # Set up AlexaPi Pulseaudio support
 sudo mkdir -p /var/lib/AlexaPi/.config/pulse

@@ -13,11 +13,11 @@ sound:
   # This is an override that is normally not needed and is a last resort.
   allow_unlisted_input_device: false
 
-  playback_handler: "vlc"
+  playback_handler: "sox"
 
   # you can go here with alsa, pulse or others
   # keep blank for the best audio output selected by the underlying code
-  output: "pulse"
+  output: "alsa"
   # output device for the audio output specified above,
   # currently supports ALSA only
   output_device: ""
