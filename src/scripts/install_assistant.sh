@@ -12,7 +12,8 @@ apt-get install portaudio19-dev libffi-dev libssl-dev -y
 # Setup Virtual Environment
 echo "## Setting up Virtual Environment"
 sudo python3 -m venv /opt/AlexaPi/env
-if [ -d "/opt/AlexaPi/env" ]; then
+if [ -d "/opt/AlexaPi/env" ]
+then
     # Will enter here if Directory exists
     /opt/AlexaPi/env/bin/pip install pip setuptools --upgrade
 
@@ -56,7 +57,9 @@ if [ -d "/opt/AlexaPi/env" ]; then
 			sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh
 		;;
 	esac
+
 else
+
 	echo ""
 	echo "-- Creating Python virtual environment for Assistant SDK failed. Please run this manually:"
 	echo "sudo python3 -m venv /opt/AlexaPi/env"
@@ -65,5 +68,6 @@ else
 	echo ""
 	echo "Exiting..."
 	exit
+
 fi
 
