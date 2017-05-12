@@ -10,6 +10,11 @@ Credits / Further Resources:
 - [Google Assistant SDK on Github](https://github.com/googlesamples/assistant-sdk-python)
 - [Google Assistant SDK Getting Started Guide](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python)
 
+```
+ATTENTION:
+Due to a major flaw (AssistantPi crashes when started automatically on boot due to audio config issues), AssistantPi is being re-written at the moment.
+If you want to install it, to be not bitten by too many bugs, please wait a few days until the first real release comes up.
+```
 
 ## Requirements
 
