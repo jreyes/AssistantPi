@@ -196,7 +196,7 @@ case ${config_action} in
         cp config.template.yaml ${CONFIG_FILE}
     ;;
     *)
-        echo "Exiting ..."
+        echo "Just press Enter when the prompts appear"
         #exit
     ;;
 
@@ -227,7 +227,14 @@ read -r -p "Enter your Client Secret [${config_defaults[Client_Secret]}]: " Clie
 config_set 'Client_Secret' "${Client_Secret}"
 
 
-run_python ./auth_web.py
+case ${config_action} in
+    [12])
+        run_python ./auth_web.py
+    ;;
+    *)
+    ;;
+esac
+
 
 ### Assistant
 case $assistant in
