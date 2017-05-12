@@ -12,54 +12,7 @@ apt-get install portaudio19-dev libffi-dev libssl-dev -y
 # Setup Virtual Environment
 echo "## Setting up Virtual Environment"
 sudo python3 -m venv /opt/AlexaPi/env
-if [ -d "/opt/AlexaPi/env" ]
-then
-    # Will enter here if Directory exists
-    /opt/AlexaPi/env/bin/pip install pip setuptools --upgrade
-
-	# Install forked Assistant SDK
-	echo "## Installing forked Assistant SDK"
-	cd /opt/AlexaPi/src
-	sudo rm -rf assistant-sdk-python
-	sudo git clone https://github.com/xtools-at/assistant-sdk-python.git
-	cd /opt/AlexaPi/src/assistant-sdk-python
-	/opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
-	/opt/AlexaPi/env/bin/pip install tenacity
-
-	echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /etc/asound.conf"
-	echo "See here for more information: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio"
-	# Put default sound config in place
-	{ sudo mv /etc/asound.conf /etc/asound.conf.bkp } || {}
-	sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
-	sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
-
-	# Set up AlexaPi Pulseaudio support
-	sudo mkdir -p /var/lib/AlexaPi/.config/pulse
-	sudo cp /etc/pulse/client.conf /var/lib/AlexaPi/.config/pulse/
-	sudo sed -i 's/autospawn = yes/autospawn = no/gi' /var/lib/AlexaPi/.config/pulse/client.conf
-	##
-	sudo adduser pulse audio
-	sudo adduser pi pulse-access
-	sudo adduser alexapi pulse-access
-	##
-	sudo cp /opt/AlexaPi/src/pulseaudio.service /etc/systemd/system/pulseaudio.service
-	sudo systemctl enable pulseaudio.service
-
-
-	echo ""
-	echo "## Auhentication with Google API"
-	echo "You can start this step manually by typing   sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh"
-	read -r -p "Start Authentication with Google API now? [Y/n]: " start_auth
-	case $start_auth in
-	    [Nn] )
-		;;
-	    * )
-			sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh
-		;;
-	esac
-
-else
-
+if [ ! -d "/opt/AlexaPi/env" ]; then
 	echo ""
 	echo "-- Creating Python virtual environment for Assistant SDK failed. Please run this manually:"
 	echo "sudo python3 -m venv /opt/AlexaPi/env"
@@ -68,6 +21,49 @@ else
 	echo ""
 	echo "Exiting..."
 	exit
-
 fi
 
+
+# Will enter here if Directory exists
+/opt/AlexaPi/env/bin/pip install pip setuptools --upgrade
+
+# Install forked Assistant SDK
+echo "## Installing forked Assistant SDK"
+cd /opt/AlexaPi/src
+sudo rm -rf assistant-sdk-python
+sudo git clone https://github.com/xtools-at/assistant-sdk-python.git
+cd /opt/AlexaPi/src/assistant-sdk-python
+/opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
+/opt/AlexaPi/env/bin/pip install tenacity
+
+echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /etc/asound.conf"
+echo "See here for more information: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio"
+# Put default sound config in place
+sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
+sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
+
+# Set up AlexaPi Pulseaudio support
+sudo mkdir -p /var/lib/AlexaPi/.config/pulse
+sudo cp /etc/pulse/client.conf /var/lib/AlexaPi/.config/pulse/
+sudo sed -i 's/autospawn = yes/autospawn = no/gi' /var/lib/AlexaPi/.config/pulse/client.conf
+##
+sudo adduser pulse audio
+sudo adduser pi pulse-access
+sudo adduser alexapi pulse-access
+##
+sudo cp /opt/AlexaPi/src/pulseaudio.service /etc/systemd/system/pulseaudio.service
+sudo systemctl enable pulseaudio.service
+
+echo ""
+echo "## Auhentication with Google API"
+echo "You can start this step manually by typing   sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh"
+read -r -p "Start Authentication with Google API now? [Y/n]: " start_auth
+case $start_auth in
+	[Nn] )
+	;;
+	* )
+		sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh
+	;;
+esac
+echo ""
+echo "-- Installation successful, please reboot now."

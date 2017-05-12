@@ -229,31 +229,13 @@ case $assistant in
         sudo bash /opt/AlexaPi/src/scripts/install_assistant.sh
     ;;
 esac
+echo ""
 ###
 
-echo ""
-echo "######################################################################################################"
-echo "IMPORTANT NOTICE REGARDING AUDIO:"
-echo "If you use a desktop OS, you HAVE TO set up your system audio so services like AlexaPi can use it too."
-echo "See https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging#pulseaudio"
-echo "######################################################################################################"
-echo ""
-
-
-### Start AlexaPi service after install
-echo ""
-echo ""
-echo "AssistantPi Installer finished"
-echo ""
-if [ "${init_type}" == "1" ]; then
-    echo ""
-    echo "Starting AlexaPi service..."
-    systemctl start AlexaPi.service
-    echo ""
-    echo "Checking AlexaPi service..."
-    sleep 1
-    systemctl status AlexaPi.service
-    echo ""
-fi
-
-echo "Exiting Installer..."
+# echo ""
+# echo "######################################################################################################"
+# echo "IMPORTANT NOTICE REGARDING AUDIO:"
+# echo "If you use a desktop OS, you HAVE TO set up your system audio so services like AlexaPi can use it too."
+# echo "See https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging#pulseaudio"
+# echo "######################################################################################################"
+# echo ""
