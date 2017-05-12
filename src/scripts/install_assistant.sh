@@ -25,14 +25,15 @@ if [ -d "/opt/AlexaPi/env" ]; then
 	/opt/AlexaPi/env/bin/python -m pip install --upgrade -e ".[samples]"
 	/opt/AlexaPi/env/bin/pip install tenacity
 
-	echo "## Copying default sound config from /opt/AlexaPi/src/assistant.example.asoundrc to /home/pi/.asoundrc"
+	echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /etc/asound.conf"
 	echo "See here for more information: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio"
 	# Put default Sound config in place
-	cp /opt/AlexaPi/src/assistant.example.asoundrc /home/pi/.asoundrc
+	sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
+	sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
 
 	echo ""
 	echo "## Auhentication with Google API"
-	echo "You can start this step manually if it fails by typing   sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh"
+	echo "You can start this step manually by typing   sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh"
 	read -r -p "Start Authentication with Google API now? [Y/n]: " start_auth
 	case $start_auth in
 	    [Nn] )
@@ -45,6 +46,7 @@ else
 	echo ""
 	echo "-- Creating Python virtual environment for Assistant SDK failed. Please run this manually:"
 	echo "sudo python3 -m venv /opt/AlexaPi/env"
+	echo "-- Check if folder  /opt/AlexaPi/env  has been created"
 	echo "-- and restart the installer with  sudo bash /opt/AlexaPi/src/scripts/install_assistant.sh"
 	echo ""
 	echo "Exiting..."

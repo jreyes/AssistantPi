@@ -120,7 +120,7 @@ event_commands:
 
 platform:
   # Name of your platform, e.g. raspberrypi, orangepi, desktop
-  device: "AssistantPi"
+  device: "raspberrypi"
 
 platforms:
   # common config for all platforms (if they support the options)
