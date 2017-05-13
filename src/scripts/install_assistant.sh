@@ -8,6 +8,7 @@ echo ""
 echo "## Installing dependencies..."
 apt-get install python3 python3-dev python3-venv -y
 apt-get install portaudio19-dev libffi-dev libssl-dev -y
+apt-get install vlc -y
 
 # Setup Virtual Environment
 echo "## Setting up Virtual Environment"
@@ -52,6 +53,7 @@ sudo sed -i 's/autospawn = yes/autospawn = no/gi' /var/lib/AlexaPi/.config/pulse
 sudo adduser pulse audio
 sudo adduser pi pulse-access
 sudo adduser alexapi pulse-access
+sudo chown -R alexapi:alexapi /var/lib/AlexaPi/
 ##
 sudo cp /opt/AlexaPi/src/pulseaudio.service /etc/systemd/system/pulseaudio.service
 sudo systemctl enable pulseaudio.service

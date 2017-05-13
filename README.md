@@ -32,7 +32,7 @@ You will need:
 cd /opt
 sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
 ```
-- Run the setup and go through all the steps. This will take a while, approx. 30min with a somewhat good Internet connection.
+- Run the setup and go through all the steps. This will take a while, approx. 35min with a somewhat good Internet connection.
 ```
 sudo /opt/AlexaPi/src/scripts/setup.sh
 ```
