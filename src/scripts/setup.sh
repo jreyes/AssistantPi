@@ -226,7 +226,7 @@ config_set 'Client_ID' "${Client_ID}"
 read -r -p "Enter your Client Secret [${config_defaults[Client_Secret]}]: " Client_Secret
 config_set 'Client_Secret' "${Client_Secret}"
 
-
+###
 case ${config_action} in
     [12])
         run_python ./auth_web.py
@@ -234,7 +234,7 @@ case ${config_action} in
     *)
     ;;
 esac
-
+###
 
 ### Assistant
 case $assistant in

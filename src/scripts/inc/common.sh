@@ -48,7 +48,6 @@ function create_user {
 
     if id -u ${RUN_USER} >/dev/null 2>&1; then
         echo "user already exists. That's cool - using that."
-        # { usermod --home --move-home ${HOME_DIR} ${RUN_USER} } || {}
     else
         if useradd --system --user-group ${RUN_USER} 2>/dev/null; then
             echo "done."

@@ -26,6 +26,8 @@ import alexapi.triggers as triggers
 from alexapi.exceptions import ConfigurationException
 from alexapi.constants import RequestType, PlayerActivity
 
+import pexpect
+
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
 coloredlogs.DEFAULT_FIELD_STYLES = {
     'hostname': {'color': 'magenta'},
@@ -339,11 +341,25 @@ def assistant_handler(voice_command):
     
     # compare to phrase_assistant from config
     voice_command_assistant = config['triggers']['pocketsphinx']['phrase_assistant']
-    #logger.debug("Compare to Assistant Command from Config: **" + voice_command_assistant + "**")
     
     if voice_command == voice_command_assistant:
 
-        # Check for Audio settings
+        if p is not None:
+            p.sendline('assistant_record')
+            p.expect('Recording audio .*')
+            # Play sound
+            pexpect.spawn("sox -q /opt/AlexaPi/src/resources/okgoogle.mp3 -t alsa vol -6 dB pad 0 0")
+            p.expect('Assistant conversation finished')
+            p.sendline('assistant_pause')
+        else:
+            logger.info('Could not communicate with Google Assistant SDK')
+
+        return True
+    else:
+        return False
+
+def start_assistant():
+    # Check for Audio settings
         block_size = ""
         flush_size = ""
         try:
@@ -362,21 +378,10 @@ def assistant_handler(voice_command):
             logger.debug("see also https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting")
         
         # Start Assistant
-        cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant --once --credentials /etc/opt/AlexaPi/assistant_credentials.json"
+        cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant --credentials /etc/opt/AlexaPi/assistant_credentials.json"
         cmd = cmd + block_size + flush_size
-        logger.debug("Assistant triggered, starting tweaked SDK with command " + cmd)
-        process = subprocess.call(cmd, shell=True, stdout=subprocess.PIPE)
-
-        # Get signals
-        # out = process.stdout.readline()
-        # out = b''.join(out).decode("utf-8")
-        # if 'exit' in out:
-        #     logger.debug("assistant_handler: conversation complete, moving on")
-        #     process.kill()
-
-        return True
-    else:
-        return False
+        p = pexpect.spawn(cmd)
+        return p
 ###
 
 def alexa_speech_recognizer(audio_stream):
@@ -641,6 +646,10 @@ if __name__ == "__main__":
     except (ConfigurationException, RuntimeError):
         platform.indicate_failure()
         sys.exit(1)
+
+    ###
+    p = start_assistant()
+    ###
 
     platform_trigger_callback = triggers.triggers['platform'].platform_callback if 'platform' in triggers.triggers else None
     platform.after_setup(platform_trigger_callback)
