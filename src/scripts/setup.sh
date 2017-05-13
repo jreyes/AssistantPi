@@ -103,7 +103,7 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
 	# echo "2 - yes, use a classic init script (for a very old PC or an embedded system)"
 	read -r -p "Which option do you prefer? [1]: " init_type
 
-    if [ "${init_type// /}" != "0" ]; then
+    #if [ "${init_type// /}" != "0" ]; then
 
         if [ "${init_type}" == "" ]; then
             init_type="1"
@@ -121,7 +121,7 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
         ###
 
         case ${init_type} in
-            2 ) # classic
+            [02] ) # classic
                 # init_classic ${monitorAlexa}
             ;;
 
@@ -133,7 +133,7 @@ if [ "$ALEXASRC_DIRECTORY" == "$ALEXASRC_DIRECTORY_CORRECT" ]; then
             ;;
         esac
 
-    fi
+    #fi
 
 fi
 

@@ -349,10 +349,13 @@ def assistant_handler(voice_command):
             p.sendline('assistant_record')
             p.expect('Recording audio .*')
             # If ready, play sound
-            pexpect.spawn("sox -q /opt/AlexaPi/src/resources/okgoogle.mp3 -t alsa vol -6 dB pad 0 0")
-            p.expect('Assistant conversation finished')
+            #pexpect.spawn("sox -q /opt/AlexaPi/src/resources/okgoogle.mp3 -t alsa vol -6 dB pad 0 0")
+            sound = pexpect.spawn("cvlc /opt/AlexaPi/src/resources/okgoogle.mp3")
+
+            p.expect('Assistant conversation finished', timeout=120)
             p.sendline('assistant_pause')
             logger.info("Assistant conversation finished")
+            sound.kill()
         else:
             logger.info('Could not communicate with Google Assistant SDK')
 
