@@ -355,7 +355,7 @@ def assistant_handler(voice_command):
             p.expect('Assistant conversation finished', timeout=120)
             p.sendline('assistant_pause')
             logger.info("Assistant conversation finished")
-            sound.kill()
+            sound.close(force=True)
         else:
             logger.info('Could not communicate with Google Assistant SDK')
 
