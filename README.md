@@ -51,6 +51,8 @@ sudo bash /opt/AlexaPi/src/scripts/update.sh
 ```
 This updates both AssistantPi and the [tweaked Assistant SDK](https://github.com/xtools-at/assistant-sdk-python) without having you to go through the installation process again.
 
+### Important Notice: If installed before May 13th 2017 for the first time, please run the setup again after the update and do the Authentication with both Google and Amazon again.
+
 
 ## Audio Settings
 

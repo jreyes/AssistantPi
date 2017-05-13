@@ -40,8 +40,6 @@ cd /opt/AlexaPi/src/assistant-sdk-python
 echo "## Copying default sound config from /opt/AlexaPi/src/assistant.asound.conf to /var/lib/AlexaPi and /home/pi"
 echo "See here for more information: https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio"
 # Put default sound config in place
-#sudo cp /opt/AlexaPi/src/assistant.asound.conf /etc/asound.conf
-#sudo ln -sf /etc/asound.conf /home/pi/.asoundrc
 sudo cp /opt/AlexaPi/src/assistant.asound.conf /home/pi/.asoundrc
 sudo cp /opt/AlexaPi/src/assistant.asound.conf /var/lib/AlexaPi/.asoundrc
 
@@ -49,12 +47,16 @@ sudo cp /opt/AlexaPi/src/assistant.asound.conf /var/lib/AlexaPi/.asoundrc
 sudo mkdir -p /var/lib/AlexaPi/.config/pulse
 sudo cp /etc/pulse/client.conf /var/lib/AlexaPi/.config/pulse/
 sudo sed -i 's/autospawn = yes/autospawn = no/gi' /var/lib/AlexaPi/.config/pulse/client.conf
-##
+## Prevent choppy Pulseaudio output
+## see https://dbader.org/blog/crackle-free-audio-on-the-raspberry-pi-with-mpd-and-pulseaudio
+sudo sed -i 's/load-module module-udev-detect tsched=0/load-module module-udev-detect/gi' /etc/pulse/default.pa
+sudo sed -i 's/load-module module-udev-detect/load-module module-udev-detect tsched=0/gi' /etc/pulse/default.pa
+## Set up system-wide Pulseaudio
 sudo adduser pulse audio
 sudo adduser pi pulse-access
 sudo adduser alexapi pulse-access
 sudo chown -R alexapi:alexapi /var/lib/AlexaPi/
-##
+## Enable new Pulseaudio service
 sudo cp /opt/AlexaPi/src/pulseaudio.service /etc/systemd/system/pulseaudio.service
 sudo systemctl enable pulseaudio.service
 

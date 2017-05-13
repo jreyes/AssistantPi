@@ -333,31 +333,36 @@ def alexa_speech_recognizer_generate_data(audio, boundary):
 
     platform.indicate_processing()
 
-### Assistant
+### AssistantPi
 def assistant_handler(voice_command):
     # clean voice_command
     voice_command = voice_command.rstrip()
-    logger.debug("Pocketsphinx Trigger found voice command: **" + voice_command + "**")
-    
+    logger.debug('Pocketsphinx Trigger found voice command: **' + voice_command + '**')
     # compare to phrase_assistant from config
     voice_command_assistant = config['triggers']['pocketsphinx']['phrase_assistant']
-    
     if voice_command == voice_command_assistant:
 
         if p is not None:
-            logger.info("Starting Assistant conversation")
+            # SDK is ready, start recording
+            logger.info('Starting Assistant conversation')
             p.sendline('assistant_record')
             p.expect('Recording audio .*')
-            # If ready, play sound
-            #pexpect.spawn("sox -q /opt/AlexaPi/src/resources/okgoogle.mp3 -t alsa vol -6 dB pad 0 0")
-            sound = pexpect.spawn("cvlc /opt/AlexaPi/src/resources/okgoogle.mp3")
+            # If ready to record, play sound
+            sound = pexpect.spawn('cvlc /opt/AlexaPi/src/resources/okgoogle.mp3')
 
-            p.expect('Assistant conversation finished', timeout=120)
-            p.sendline('assistant_pause')
-            logger.info("Assistant conversation finished")
+            try:
+                p.expect('Assistant conversation finished', timeout=180)
+                p.sendline('assistant_pause')
+            except:
+                # Restart Assistant if Timeout occurs
+                p.close(force=True)
+                p = start_assistant()
+
+            logger.info('Assistant conversation finished')
             sound.close(force=True)
         else:
-            logger.info('Could not communicate with Google Assistant SDK')
+            logger.info('Could not communicate with Google Assistant SDK, restarting...')
+            p = start_assistant()
 
         return True
     else:
@@ -382,7 +387,7 @@ def start_assistant():
             logger.debug("Old configuration file without Assistant audio settings detected. To be able to adjust Google Adio settings, run setup again and create a new configuration.")
             logger.debug("see also https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting")
         
-        # Start Assistant
+        # Start Assistant SDK
         cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant --credentials /etc/opt/AlexaPi/assistant_credentials.json"
         cmd = cmd + block_size + flush_size
         p = pexpect.spawn(cmd)
@@ -652,7 +657,7 @@ if __name__ == "__main__":
         platform.indicate_failure()
         sys.exit(1)
 
-    ###
+    ### Start Assistant SDK
     p = start_assistant()
     ###
 
