@@ -345,21 +345,22 @@ def assistant_handler(voice_command):
         if p is not None:
             # SDK is ready, start recording
             logger.info('Starting Assistant conversation')
-            p.sendline('assistant_record')
-            p.expect('Recording audio .*')
-            # If ready to record, play sound
-            sound = pexpect.spawn('cvlc /opt/AlexaPi/src/resources/okgoogle.mp3')
-
             try:
+                # Tell Assistant to start recording
+                p.sendline('assistant_record')
+                p.expect('Recording audio .*')
+                # If ready to record, play sound
+                sound = pexpect.spawn('cvlc /opt/AlexaPi/src/resources/okgoogle.mp3')
+                # Wait for end of conversation
                 p.expect('Assistant conversation finished', timeout=180)
                 p.sendline('assistant_pause')
+                sound.close(force=True)
             except:
                 # Restart Assistant if Timeout occurs
                 p.close(force=True)
                 p = start_assistant()
 
             logger.info('Assistant conversation finished')
-            sound.close(force=True)
         else:
             logger.info('Could not communicate with Google Assistant SDK, restarting...')
             p = start_assistant()

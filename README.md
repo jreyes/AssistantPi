@@ -38,8 +38,12 @@ sudo /opt/AlexaPi/src/scripts/setup.sh
 ```
 - If Authentication with Google Assistant API fails during setup, try to run it manually using `sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh`
 - If Google Assistant setup crashes, do what the Error message says and restart with `sudo bash /opt/AlexaPi/src/scripts/install_assistant.sh`
-- Proceed with [Step 3 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation).
-- Make sure to check [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio) too. The config file is already in place for you (`/home/pi/.asoundrc` and `/var/lib/AlexaPi/.asoundrc` for the bootup-service), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
+- Check your audio setup. The installer puts the default config files in place, which should work for most people. Nevertheless, you *might* have to tweak them. You can skip this step and come back if you're running into any kind of trouble.
+  - Read through [Step 3 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation).
+  - Make sure to check [Configure Google Assistant Audio](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio) too. The config files are already in place for you (`/home/pi/.asoundrc` and `/var/lib/AlexaPi/.asoundrc` for the bootup-service - change both if necessary), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
+- Start AssistantPi:
+  - If you've selected run on boot, reboot your Pi or run `sudo systemctl start AlexaPi.service`.
+  - If not running on boot, start the script with `python /opt/AlexaPi/src/main.py`.
 - Trigger Assistant and Alexa with the hotwords *Google* and *Alexa*.
 
 
@@ -59,7 +63,7 @@ This updates both AssistantPi and the [tweaked Assistant SDK](https://github.com
 Make sure you've been to `sudo raspi-config`, *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
 
 The base audio config is done for you in the setup for both AlexaPi and Assistant. However, if encountering any audio issues in playback or recording, make sure to check by here:
-- [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
+- [Configure Google Assistant Audio](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
 - [AlexaPi Audio Setup and Debugging](https://github.com/alexa-pi/AlexaPi/wiki/Audio-setup-&-debugging)
 - [AlexaPi Wiki](https://github.com/alexa-pi/AlexaPi/wiki/)
 
