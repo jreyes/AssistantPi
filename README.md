@@ -117,7 +117,6 @@ Afterwards,
 ```
 sudo nano /etc/opt/AlexaPi.config.yaml
 
-#...
 # find pocketsphinx > language, change to 'de-de'
 # find pocketsphinx > dictionary, change to 'cmusphinx-voxforge-de.dic'
 ```
