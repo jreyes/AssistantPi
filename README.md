@@ -36,7 +36,7 @@ sudo git clone https://github.com/xtools-at/AssistantPi.git AlexaPi
 ```
 sudo /opt/AlexaPi/src/scripts/setup.sh
 ```
-- If Authentication with Google Assistant API fails during setup, try to run it manually with `sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh`
+- If Authentication with Google Assistant API fails during setup, try to run it manually using `sudo bash /opt/AlexaPi/src/scripts/auth_assistant.sh`
 - If Google Assistant setup crashes, do what the Error message says and restart with `sudo bash /opt/AlexaPi/src/scripts/install_assistant.sh`
 - Proceed with [Step 3 of AlexaPi Installation Guide](https://github.com/alexa-pi/AlexaPi/wiki/Installation).
 - Make sure to check [Configure Google Assistant Audio Output](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio) too. The config file is already in place for you (`/home/pi/.asoundrc` and `/var/lib/AlexaPi/.asoundrc` for the bootup-service), but you might have to adjust the *card*- and *device*-ids according to the output of `aplay -l && arecord -l` on your Pi.
@@ -72,11 +72,13 @@ You can set the values for the Block- and Flush size in the AssistantPi config, 
 
 ## Change Hotwords
 
-To change the hotwords (currently Alexa and Google), change both these files before running the setup:
+To change the hotwords (currently *Alexa* and *Google*), either change both these files **before** running the setup:
 
 `.../src/config.template.yaml` (*phrase* and *phrase_assistant*) and `.../src/keyphrase.list`
 
-In the latter, you can also tweak the sensitivity of the hotword recognition. See [here for more information on this topic](http://cmusphinx.sourceforge.net/wiki/faq#qhow_to_implement_hot_word_listening).
+or `/etc/opt/AlexaPi/config.yaml` and `/opt/AlexaPi/src/keyphrase.list` **after** setup.
+
+In the latter, you can also tweak the sensitivity of the hotword recognition. See [here for more information on this topic](http://cmusphinx.sourceforge.net/wiki/faq#qhow_to_implement_hot_word_listening). You can also combine wakewords, e.g. "ok google".
 
 Also make sure that your new hotwords are included in the language model. Check the following directory for a file with `.dict` or `.dic` extension and add your hotwords if not already there: `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
 
