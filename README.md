@@ -58,9 +58,24 @@ This updates both AssistantPi and the [tweaked Assistant SDK](https://github.com
 ### Important Notice: If installed before May 13th 2017 for the first time, please run the setup again after the update and do the Authentication with both Google and Amazon again.
 
 
-## Audio Settings
+## Debugging
 
-Make sure you've been to `sudo raspi-config`, *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
+To start AssistantPi in debugging mode, stop the service (if running) and run the script with the `-d` flag:
+```
+sudo systemctl stop AlexaPi.service
+python /opt/AlexaPi/src/main.py -d
+```
+To start the embedded Google Assistant SDK, run
+```
+/opt/AlexaPi/env/bin/python -m googlesamples.assistant --credentials /etc/opt/AlexaPi/assistant_credentials.json
+
+# same as running
+### source /opt/AlexaPi/env/bin/activate
+### python -m googlesamples.assistant --credentials /etc/opt/AlexaPi/assistant_credentials.json
+```
+and type *assistant_record* into the prompt to start a conversation. For more information on [Assistant Troubleshooting, check here](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting).
+
+### Audio Settings
 
 The base audio config is done for you in the setup for both AlexaPi and Assistant. However, if encountering any audio issues in playback or recording, make sure to check by here:
 - [Configure Google Assistant Audio](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/configure-audio)
@@ -71,6 +86,8 @@ If Google Assistant audio output is choppy or truncated, check the following. Ma
 - [Google Assistant Audio Troubleshooting](https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting#audio-issues)
 
 You can set the values for the Block- and Flush size in the AssistantPi config, either before Installation in `/opt/AlexaPi/src/config.template.yaml` or afterwards in `/etc/opt/AlexaPi/config.yaml`. Go find the attribute `sound > assistant` and use your values for `block_size` and `flush_size`.
+
+Make sure you've been to `sudo raspi-config`, *Advanced Options > Audio* and have set the desired audio output (i.e. 3.5mm Jack, not HDMI).
 
 
 
@@ -87,9 +104,9 @@ In the latter, you can also tweak the sensitivity of the hotword recognition. Se
 Also make sure that your new hotwords are included in the language model. Check the following directory for a file with `.dict` or `.dic` extension and add your hotwords if not already there: `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
 
 
-## Change Hotword language
+### Change Hotword language
 
-If you want to change the language for the hotword recognition (which might be necessary if your hotwords aren't recognized well), head over to [CMU Sphinx download](https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/) page and get the model files for your language.
+The default language coming with Pocketsphinx for the hotword recognition is US English. If you want to change it (which might be necessary if your hotwords aren't recognized well), head over to [CMU Sphinx download](https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/) page and get the model files for your language.
 In particular, you have to place the following files
 - FILENAME.lm.bin
 - FILENAME.dic
@@ -109,7 +126,7 @@ Afterwards,
   - change *dictionary* to your FILENAME.dic (e.g. 'cmusphinx-voxforge-de.dic')
 
 
-### Install German language package
+#### Install German language package
 
 - [Download package from here](http://dl.xtools.at/pocketsphinx-german.zip) and unzip.
 - Move contents to `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`

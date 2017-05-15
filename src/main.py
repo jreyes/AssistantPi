@@ -338,7 +338,7 @@ def alexa_speech_recognizer_generate_data(audio, boundary):
 def assistant_handler(voice_command):
     # clean voice_command
     voice_command = voice_command.rstrip()
-    logger.debug('Pocketsphinx Trigger found voice command: **' + voice_command + '**')
+    logger.debug('Pocketsphinx triggered with hotword: **' + voice_command + '**')
     # compare to phrase_assistant from config
     voice_command_assistant = config['triggers']['pocketsphinx']['phrase_assistant']
     if voice_command == voice_command_assistant:
