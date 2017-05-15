@@ -128,8 +128,12 @@ Afterwards,
 
 #### Install German language package
 
-- [Download package from here](http://dl.xtools.at/pocketsphinx-german.zip) and unzip.
-- Move contents to `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
+- [Download package from here](http://dl.xtools.at/pocketsphinx-german.zip) and unzip, move contents to `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`:
+```
+cd /home/pi/Downloads
+wget http://dl.xtools.at/pocketsphinx-german.zip
+sudo unzip pocketsphinx-german.zip -d /usr/local/lib/python2.7/dist-packages/pocketsphinx/model/
+```
 - Edit your _config.yaml_ and include new values
 ```
 sudo nano /etc/opt/AlexaPi.config.yaml
