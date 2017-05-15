@@ -27,6 +27,7 @@ from alexapi.exceptions import ConfigurationException
 from alexapi.constants import RequestType, PlayerActivity
 
 import pexpect
+global p
 
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
 coloredlogs.DEFAULT_FIELD_STYLES = {
@@ -341,7 +342,7 @@ def assistant_handler(voice_command):
     # compare to phrase_assistant from config
     voice_command_assistant = config['triggers']['pocketsphinx']['phrase_assistant']
     if voice_command == voice_command_assistant:
-
+        global p
         if p is not None:
             # SDK is ready, start recording
             logger.info('Starting Assistant conversation')
@@ -659,6 +660,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     ### Start Assistant SDK
+    global p
     p = start_assistant()
     ###
 
