@@ -99,14 +99,16 @@ To change the hotwords (currently *Alexa* and *Google*), either change both thes
 
 or `/etc/opt/AlexaPi/config.yaml` and `/opt/AlexaPi/src/keyphrase.list` **after** setup.
 
-In the latter, you can also tweak the sensitivity of the hotword recognition. See [here for more information on this topic](http://cmusphinx.sourceforge.net/wiki/faq#qhow_to_implement_hot_word_listening). You can also combine wakewords, e.g. "ok google".
+In the `keyphrase.list`, you can also tweak the sensitivity of the hotword recognition. From the [CMUSphinx Wiki](https://cmusphinx.github.io/wiki/faq/#q-how-to-implement-hot-word-listening):
+> Threshold must be tuned for every keyphrase on a test data to get the right balance missed detections and false alarms. You can try values like 1e-5 to 1e-50.
+> For the best accuracy it is better to have keyphrase with 3-4 syllables. Too short phrases are easily confused.
 
-Also make sure that your new hotwords are included in the language model. Check the following directory for a file with `.dict` or `.dic` extension and add your hotwords if not already there: `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
+You can also combine wakewords, e.g. "ok google". Also make sure that your new hotwords are included in the language model. Check the following directory for a file with `.dict` or `.dic` extension and add your hotwords if not already there: `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
 
 
 ### Change Hotword language
 
-The default language coming with Pocketsphinx for the hotword recognition is US English. If you want to change it (which might be necessary if your hotwords aren't recognized well), head over to [CMU Sphinx download](https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/) page and get the model files for your language.
+The default language coming with Pocketsphinx for the hotword recognition is US English. If you want to change it (which might be necessary if your hotwords aren't recognized well), head over to [CMUSphinx Downloads](https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/) page and get the model files for your language.
 In particular, you have to place the following files
 - FILENAME.lm.bin
 - FILENAME.dic

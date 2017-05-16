@@ -56,6 +56,8 @@ sudo adduser pulse audio
 sudo adduser pi pulse-access
 sudo adduser alexapi pulse-access
 sudo chown -R alexapi:alexapi /var/lib/AlexaPi/
+## Prevent Error caused by Paulseaudio looking in /var/run
+sudo ln -s /home/pi/.config/pulse /var/run/pulse
 ## Enable new Pulseaudio service
 sudo cp /opt/AlexaPi/src/pulseaudio.service /etc/systemd/system/pulseaudio.service
 sudo systemctl enable pulseaudio.service
