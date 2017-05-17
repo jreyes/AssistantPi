@@ -90,9 +90,15 @@ triggers:
     enabled: true
     voice_confirm: true
 
+    # add your Hotwords to ./keyphrase.list too (in lowercase)!
+    ## 'phrase' string only
     phrase: "alexa"
+    ## 'phrase_assistant' can be a string or string[] (lowercase)
+    ## all howtwords here will trigger Assistant, everything else in your ./keyphrase.lst will trigger Alexa
+    ## phrase_assistant = ["ok google", "hey google"]
     phrase_assistant: "google"
     threshold: 1e-10 # unused, change in ./keyphrase.list
+
     language: "en-us"
     dictionary: "cmudict-en-us.dict"
 

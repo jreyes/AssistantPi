@@ -337,11 +337,14 @@ def alexa_speech_recognizer_generate_data(audio, boundary):
 ### AssistantPi
 def assistant_handler(voice_command):
     # clean voice_command
-    voice_command = voice_command.rstrip()
+    if voice_command is None or voice_command is "":
+        return False
+    else:
+        voice_command = voice_command.rstrip()
     logger.debug('Pocketsphinx triggered with hotword: **' + voice_command + '**')
     # compare to phrase_assistant from config
     voice_command_assistant = config['triggers']['pocketsphinx']['phrase_assistant']
-    if voice_command == voice_command_assistant:
+    if voice_command in voice_command_assistant:
         global p
         if p is not None:
             # SDK is ready, start recording

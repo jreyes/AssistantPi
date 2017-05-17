@@ -92,7 +92,10 @@ class PocketsphinxTrigger(BaseTrigger):
 
 			if triggered:
 				### Assistant Starts Here
-				voice_command = self._decoder.hyp().hypstr
+				try:
+					voice_command = self._decoder.hyp().hypstr
+				except:
+					voice_command = ""
 				self._trigger_callback(self, voice_command)
 				###
 

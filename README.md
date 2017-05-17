@@ -99,11 +99,13 @@ To change the hotwords (currently *Alexa* and *Google*), either change both thes
 
 or `/etc/opt/AlexaPi/config.yaml` and `/opt/AlexaPi/src/keyphrase.list` **after** setup.
 
+In the `config.yaml`, you may use a single String or an Array of Strings for your **phrase_assistant** (only). Every string there will trigger Assistant, everything else in your `keyphrase.list` will trigger Alexa.
+
 In the `keyphrase.list`, you can also tweak the sensitivity of the hotword recognition. From the [CMUSphinx Wiki](https://cmusphinx.github.io/wiki/faq/#q-how-to-implement-hot-word-listening):
 > Threshold must be tuned for every keyphrase on a test data to get the right balance missed detections and false alarms. You can try values like 1e-5 to 1e-50.
 > For the best accuracy it is better to have keyphrase with 3-4 syllables. Too short phrases are easily confused.
 
-You can also combine wakewords, e.g. "ok google". Also make sure that your new hotwords are included in the language model. Check the following directory for a file with `.dict` or `.dic` extension and add your hotwords if not already there: `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
+You can also combine wakewords, e.g. "ok google" and/or "hey google". Also make sure that your new hotwords are included in the language model. Check the following directory for a file with `.dict` or `.dic` extension and add your hotwords if not already there: `/usr/local/lib/python2.7/dist-packages/pocketsphinx/model/`
 
 
 ### Change Hotword language
