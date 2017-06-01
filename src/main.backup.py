@@ -15,25 +15,19 @@ import email
 import subprocess
 from future.builtins import bytes
 
+import yaml
 import requests
 import coloredlogs
 
+import alexapi.config
 import alexapi.tunein as tunein
 import alexapi.capture
 import alexapi.triggers as triggers
-from alexapi.playback_handlers.vlchandler import VlcHandler
+from alexapi.exceptions import ConfigurationException
 from alexapi.constants import RequestType, PlayerActivity
-
-import paho.mqtt.client as mqtt
 
 import pexpect
 global p
-
-
-MQTT_CONFIG = "config"
-MQTT_CONFIG_TOPIC = "config/assistantpi"
-MQTT_VOICE_STATUS_TOPIC = "voice/status"
-
 
 logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
 coloredlogs.DEFAULT_FIELD_STYLES = {
@@ -72,12 +66,20 @@ parser.add_option('--daemon',
 cmdopts, cmdargs = parser.parse_args()
 silent = cmdopts.silent
 debug = cmdopts.debug
-debug = True
+
+config_exists = alexapi.config.filename is not None
+
+if config_exists:
+    with open(alexapi.config.filename, 'r') as stream:
+        config = yaml.load(stream)
 
 if debug:
     log_level = logging.DEBUG
 else:
-    log_level = logging.getLevelName('INFO')
+    if config_exists:
+        log_level = logging.getLevelName(config.get('logging', 'INFO').upper())
+    else:
+        log_level = logging.getLevelName('INFO')
 
 if cmdopts.daemon:
     coloredlogs.DEFAULT_LOG_FORMAT = '%(levelname)s: %(message)s'
@@ -85,10 +87,14 @@ else:
     coloredlogs.DEFAULT_LOG_FORMAT = '%(asctime)s %(levelname)s: %(message)s'
 
 coloredlogs.install(level=log_level)
-alexa_logger = logging.getLogger('assistantpi')
+alexa_logger = logging.getLogger('alexapi')
 alexa_logger.setLevel(log_level)
 
 logger = logging.getLogger(__name__)
+
+if not config_exists:
+    logger.critical('Can not find configuration file. Exiting...')
+    sys.exit(1)
 
 # Setup event commands
 event_commands = {
@@ -98,10 +104,13 @@ event_commands = {
     'shutdown': "",
 }
 
-config = None
-platform = None
-token = None
-capture = None
+if 'event_commands' in config:
+    event_commands.update(config['event_commands'])
+
+im = importlib.import_module('alexapi.device_platforms.' + config['platform']['device'] + 'platform', package=None)
+cl = getattr(im, config['platform']['device'].capitalize() + 'Platform')
+platform = cl(config)
+
 
 class Player(object):
 
@@ -190,12 +199,9 @@ def playback_callback(requestType, playerActivity, streamId):
 
     return player.playback_callback(requestType, playerActivity, streamId)
 
-# im = importlib.import_module('alexapi.playback_handlers.' + config['sound']['playback_handler'] + "handler", package=None)
-# cl = getattr(im, config['sound']['playback_handler'].capitalize() + 'Handler')
-# pHandler = cl(config, playback_callback)
-# player = Player(config, pHandler)
-
-pHandler = VlcHandler(config, playback_callback)
+im = importlib.import_module('alexapi.playback_handlers.' + config['sound']['playback_handler'] + "handler", package=None)
+cl = getattr(im, config['sound']['playback_handler'].capitalize() + 'Handler')
+pHandler = cl(config, playback_callback)
 player = Player(config, platform, pHandler)
 
 
@@ -214,6 +220,65 @@ def mrl_fix(url):
         url = new_url
 
     return url
+
+
+def internet_on():
+    try:
+        requests.get('https://api.amazon.com/auth/o2/token')
+        logger.info("Connection OK")
+        return True
+    except requests.exceptions.RequestException:
+        logger.error("Connection Failed")
+        return False
+
+
+class Token(object):
+
+    _token = ''
+    _timestamp = None
+    _validity = 3570
+
+    def __init__(self, aconfig):
+
+        self._aconfig = aconfig
+
+        if not self._aconfig.get('refresh_token'):
+            logger.critical("AVS refresh_token not found in the configuration file. "
+                    "Run the setup again to fix your installation (see project wiki for installation instructions).")
+            raise ConfigurationException
+
+        self.renew()
+
+    def __str__(self):
+
+        if (not self._timestamp) or (time.time() - self._timestamp > self._validity):
+            logger.debug("AVS token: Expired")
+            self.renew()
+
+        return self._token
+
+    def renew(self):
+
+        logger.info("AVS token: Requesting a new one")
+
+        payload = {
+            "client_id": self._aconfig['Client_ID'],
+            "client_secret": self._aconfig['Client_Secret'],
+            "refresh_token": self._aconfig['refresh_token'],
+            "grant_type": "refresh_token"
+        }
+
+        url = "https://api.amazon.com/auth/o2/token"
+        try:
+            response = requests.post(url, data=payload)
+            resp = json.loads(response.text)
+
+            self._token = resp['access_token']
+            self._timestamp = time.time()
+
+            logger.info("AVS token: Obtained successfully")
+        except requests.exceptions.RequestException as exp:
+            logger.critical("AVS token: Failed to obtain a token: " + str(exp))
 
 
 # from https://github.com/respeaker/Alexa/blob/master/alexa.py
@@ -269,7 +334,6 @@ def alexa_speech_recognizer_generate_data(audio, boundary):
 
     platform.indicate_processing()
 
-
 ### AssistantPi
 def assistant_handler(voice_command):
     # clean voice_command
@@ -309,36 +373,32 @@ def assistant_handler(voice_command):
     else:
         return False
 
-
 def start_assistant():
     # Check for Audio settings
-    block_size = ""
-    flush_size = ""
-    try:
-        block_size = config['sound']['assistant']['block_size']
-        flush_size = config['sound']['assistant']['flush_size']
-        if block_size is not None and block_size is not "":
-            block_size = " --audio-block-size=" + str(block_size)
-        else:
-            block_size = ""
-        if flush_size is not None and flush_size is not "":
-            flush_size = " --audio-flush-size=" + str(flush_size)
-        else:
-            flush_size = ""
-    except:
-        logger.debug(
-            "Old configuration file without Assistant audio settings detected. To be able to adjust Google Adio settings, run setup again and create a new configuration.")
-        logger.debug(
-            "see also https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting")
-
-    # Start Assistant SDK
-    cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant --credentials /etc/opt/AlexaPi/assistant_credentials.json"
-    cmd = cmd + block_size + flush_size
-    p = pexpect.spawn(cmd)
-    return p
-
-
+        block_size = ""
+        flush_size = ""
+        try:
+            block_size = config['sound']['assistant']['block_size']
+            flush_size = config['sound']['assistant']['flush_size']
+            if block_size is not None and block_size is not "":
+                block_size = " --audio-block-size=" + str(block_size)
+            else:
+                block_size = ""
+            if flush_size is not None and flush_size is not "":
+                flush_size = " --audio-flush-size=" + str(flush_size)
+            else:
+                flush_size = ""
+        except:
+            logger.debug("Old configuration file without Assistant audio settings detected. To be able to adjust Google Adio settings, run setup again and create a new configuration.")
+            logger.debug("see also https://developers.google.com/assistant/sdk/prototype/getting-started-pi-python/troubleshooting")
+        
+        # Start Assistant SDK
+        cmd = "/opt/AlexaPi/env/bin/python -m googlesamples.assistant --credentials /etc/opt/AlexaPi/assistant_credentials.json"
+        cmd = cmd + block_size + flush_size
+        p = pexpect.spawn(cmd)
+        return p
 ###
+
 def alexa_speech_recognizer(audio_stream):
     # https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/rest/speechrecognizer-requests
 
@@ -356,7 +416,6 @@ def alexa_speech_recognizer(audio_stream):
     platform.indicate_processing(False)
 
     process_response(resp)
-
 
 def alexa_getnextitem(navigationToken):
     # https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/rest/audioplayer-getnextitem-request
@@ -378,57 +437,6 @@ def alexa_getnextitem(navigationToken):
 
     response = requests.post(url, headers=headers, data=json.dumps(data))
     process_response(response)
-
-
-def alexa_playback_progress_report_request(requestType, playerActivity, stream_id):
-    # https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/rest/audioplayer-events-requests
-    # streamId                  Specifies the identifier for the current stream.
-    # offsetInMilliseconds      Specifies the current position in the track, in milliseconds.
-    # playerActivity            IDLE, PAUSED, or PLAYING
-
-    logger.debug("Sending Playback Progress Report Request...")
-
-    headers = {
-        'Authorization': 'Bearer %s' % token
-    }
-
-    data = {
-        "messageHeader": {},
-        "messageBody": {
-            "playbackState": {
-                "streamId": stream_id,
-                "offsetInMilliseconds": 0,
-                "playerActivity": playerActivity.upper()
-            }
-        }
-    }
-
-    if requestType.upper() == RequestType.ERROR:
-        # The Playback Error method sends a notification to AVS that the audio player has experienced an issue during playback.
-        url = "https://access-alexa-na.amazon.com/v1/avs/audioplayer/playbackError"
-    elif requestType.upper() == RequestType.FINISHED:
-        # The Playback Finished method sends a notification to AVS that the audio player has completed playback.
-        url = "https://access-alexa-na.amazon.com/v1/avs/audioplayer/playbackFinished"
-    elif requestType.upper() == PlayerActivity.IDLE: # This is an error as described in https://github.com/alexa-pi/AlexaPi/issues/117
-        # The Playback Idle method sends a notification to AVS that the audio player has reached the end of the playlist.
-        url = "https://access-alexa-na.amazon.com/v1/avs/audioplayer/playbackIdle"
-    elif requestType.upper() == RequestType.INTERRUPTED:
-        # The Playback Interrupted method sends a notification to AVS that the audio player has been interrupted.
-        # Note: The audio player may have been interrupted by a previous stop Directive.
-        url = "https://access-alexa-na.amazon.com/v1/avs/audioplayer/playbackInterrupted"
-    elif requestType.upper() == "PROGRESS_REPORT":
-        # The Playback Progress Report method sends a notification to AVS with the current state of the audio player.
-        url = "https://access-alexa-na.amazon.com/v1/avs/audioplayer/playbackProgressReport"
-    elif requestType.upper() == RequestType.STARTED:
-        # The Playback Started method sends a notification to AVS that the audio player has started playing.
-        url = "https://access-alexa-na.amazon.com/v1/avs/audioplayer/playbackStarted"
-
-    response = requests.post(url, headers=headers, data=json.dumps(data))
-    if response.status_code != 204:
-        logger.warning("(alexa_playback_progress_report_request Response) %s", response)
-    else:
-        logger.debug("Playback Progress Report was Successful")
-
 
 def alexa_playback_progress_report_request(requestType, playerActivity, stream_id):
     # https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/rest/audioplayer-events-requests
@@ -560,10 +568,7 @@ def process_response(response):
 
         platform.indicate_failure()
 
-
 trigger_thread = None
-
-
 def trigger_callback(trigger, voice_command):
     global trigger_thread
 
@@ -611,10 +616,7 @@ def trigger_process(trigger, voice_command):
 
 
 def cleanup(signal, frame):   # pylint: disable=redefined-outer-name,unused-argument
-    logger.debug("Cleaning up Another Smart Mirror platform")
-    mqttClient.loop_stop()
-
-    # platform.cleanup()
+    platform.cleanup()
     pHandler.cleanup()
     shutil.rmtree(tmp_path)
 
@@ -624,42 +626,55 @@ def cleanup(signal, frame):   # pylint: disable=redefined-outer-name,unused-argu
     sys.exit(0)
 
 
-def on_mqtt_connect(client, userdata, flags_dict, result):
-    # Subscribe to interested topics
-    client.subscribe(MQTT_CONFIG_TOPIC)
-
-    # Request AssistantPI config
-    client.publish(MQTT_CONFIG, "assistantpi")
-
-
-def on_mqtt_message(client, userdata, msg):
-    if msg.topic == MQTT_CONFIG_TOPIC:
-        logger.debug("Received configuration")
-
-        global config
-        config = json.dumps(str(msg.payload))
-
-        global p
-        p = start_assistant()
-
-
-def on_log(mosq, obj, level, string):
-    print(string)
-
 if __name__ == "__main__":
 
     for sig in (signal.SIGABRT, signal.SIGILL, signal.SIGINT, signal.SIGSEGV, signal.SIGTERM):
         signal.signal(sig, cleanup)
 
-    logger.debug("Setting up Another Smart Mirror platform")
-    mqttClient = mqtt.Client("AssistantPI")
-    mqttClient.on_connect = on_mqtt_connect
-    mqttClient.on_message = on_mqtt_message
-    mqttClient.on_log = on_log
+    if event_commands['startup']:
+        subprocess.Popen(event_commands['startup'], shell=True, stdout=subprocess.PIPE)
 
-    logger.debug("Starting Another Smart Mirror platform MQTT Client")
-    mqttClient.connect("localhost", 1883)
-    mqttClient.loop_start()
+    try:
+        capture = alexapi.capture.Capture(config, tmp_path)
+    except ConfigurationException as exp:
+        logger.critical(exp)
+        sys.exit(1)
+
+    capture.setup(platform.indicate_recording)
+
+    triggers.init(config, trigger_callback)
+    triggers.setup()
+
+    pHandler.setup()
+    platform.setup()
+
+    logger.info("Checking Internet Connection ...")
+    while not internet_on():
+        time.sleep(1)
+
+    try:
+        token = Token(config['alexa'])
+
+        if not str(token):
+            raise RuntimeError
+
+    except (ConfigurationException, RuntimeError):
+        platform.indicate_failure()
+        sys.exit(1)
+
+    ### Start Assistant SDK
+    global p
+    p = start_assistant()
+    ###
+
+    platform_trigger_callback = triggers.triggers['platform'].platform_callback if 'platform' in triggers.triggers else None
+    platform.after_setup(platform_trigger_callback)
+    triggers.enable()
+
+    if not silent:
+        player.play_speech(resources_path + "hello.mp3")
+
+    platform.indicate_success()
 
     while True:
         time.sleep(1)
